@@ -1,0 +1,85 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String        @id @default(uuid())
+  clerkId       String        @unique
+  email         String        @unique
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  contactViews  ContactView[]
+
+  @@map("users")
+}
+
+model Agency {
+  id              String    @id @default(uuid())
+  name            String
+  state           String?
+  stateCode       String?
+  type            String?
+  population      Int?
+  website         String?
+  totalSchools    Int?
+  totalStudents   Int?
+  mailingAddress  String?
+  gradeSpan       String?
+  locale          String?
+  csaCbsa         String?
+  domainName      String?
+  physicalAddress String?
+  phone           String?
+  status          String?
+  studentTeacherRatio Float?
+  supervisoryUnion    String?
+  county          String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  contacts        Contact[]
+
+  @@index([name])
+  @@index([state])
+  @@map("agencies")
+}
+
+model Contact {
+  id              String        @id @default(uuid())
+  firstName       String
+  lastName        String
+  email           String?
+  phone           String?
+  title           String?
+  emailType       String?
+  contactFormUrl  String?
+  department      String?
+  agencyId        String?
+  firmId          String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  agency          Agency?       @relation(fields: [agencyId], references: [id], onDelete: SetNull)
+  contactViews    ContactView[]
+
+  @@index([agencyId])
+  @@index([firstName, lastName])
+  @@index([email])
+  @@map("contacts")
+}
+
+model ContactView {
+  id         String   @id @default(uuid())
+  userId     String
+  contactId  String
+  viewedAt   DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  contact    Contact  @relation(fields: [contactId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, contactId, viewedAt])
+  @@index([userId, viewedAt])
+  @@map("contact_views")
+}
