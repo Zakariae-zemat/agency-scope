@@ -60,7 +60,7 @@ export function AgenciesTable({
     params.set('page', '1');
 
     startTransition(() => {
-      router.push(`/agencies?${params.toString()}`);
+      router.push(`/dashboard/agencies?${params.toString()}`);
     });
   };
 
@@ -77,7 +77,7 @@ export function AgenciesTable({
     const params = new URLSearchParams(searchParams.toString());
     params.set('page', page.toString());
     startTransition(() => {
-      router.push(`/agencies?${params.toString()}`);
+      router.push(`/dashboard/agencies?${params.toString()}`);
     });
   };
 

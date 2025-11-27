@@ -72,7 +72,7 @@ export function ContactsTable({
     params.set('page', '1');
 
     startTransition(() => {
-      router.push(`/contacts?${params.toString()}`);
+      router.push(`/dashboard/contacts?${params.toString()}`);
     });
   };
 
@@ -80,7 +80,7 @@ export function ContactsTable({
     const params = new URLSearchParams(searchParams.toString());
     params.set('page', page.toString());
     startTransition(() => {
-      router.push(`/contacts?${params.toString()}`);
+      router.push(`/dashboard/contacts?${params.toString()}`);
     });
   };
 
@@ -168,7 +168,7 @@ export function ContactsTable({
                     </p>
                   </div>
                 </div>
-                <Link href="/upgrade">
+                <Link href="/dashboard/upgrade">
                   <Button variant="outline" size="sm">
                     <TrendingUp className="h-4 w-4 mr-2" />
                     Upgrade Now
@@ -431,7 +431,7 @@ export function ContactsTable({
               <Button variant="outline" className="flex-1" onClick={() => setShowUpgradeModal(false)}>
                 Maybe Later
               </Button>
-              <Link href="/upgrade" className="flex-1">
+              <Link href="/dashboard/upgrade" className="flex-1">
                 <Button className="w-full">
                   <TrendingUp className="h-4 w-4 mr-2" />
                   Upgrade Now

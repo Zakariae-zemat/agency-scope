@@ -45,6 +45,7 @@ model Agency {
 
   @@index([name])
   @@index([state])
+  @@index([county])
   @@map("agencies")
 }
 
@@ -66,8 +67,11 @@ model Contact {
   contactViews    ContactView[]
 
   @@index([agencyId])
-  @@index([firstName, lastName])
+  @@index([firstName])
+  @@index([lastName])
   @@index([email])
+  @@index([title])
+  @@index([department])
   @@map("contacts")
 }
 

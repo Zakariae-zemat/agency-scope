@@ -128,42 +128,61 @@ async function main() {
   const contactRows = await readCSV<ContactRow>(contactsPath);
   
   let contactsImported = 0;
-  let contactsWithoutAgency = 0;
+  let contactsSkipped = 0;
+  let contactsFailed = 0;
 
-  for (const row of contactRows) {
-    try {
-      // Check if agency exists
-      const agencyId = row.agency_id && agencyIdMap.has(row.agency_id) 
-        ? row.agency_id 
-        : null;
+  // Process in batches for better performance - ONLY contacts with valid agencies
+  const batchSize = 100;
+  for (let i = 0; i < contactRows.length; i += batchSize) {
+    const batch = contactRows.slice(i, i + batchSize);
+    const contactsToCreate = [];
 
-      if (!agencyId && row.agency_id) {
-        contactsWithoutAgency++;
+    for (const row of batch) {
+      // Check if agency exists - SKIP if no valid agency
+      const hasValidAgency = row.agency_id && agencyIdMap.has(row.agency_id);
+
+      if (!hasValidAgency) {
+        contactsSkipped++;
+        continue; // Skip this contact
       }
 
-      await prisma.contact.create({
-        data: {
-          id: row.id,
-          firstName: row.first_name,
-          lastName: row.last_name,
-          email: row.email || null,
-          phone: row.phone || null,
-          title: row.title || null,
-          emailType: row.email_type || null,
-          contactFormUrl: row.contact_form_url || null,
-          department: row.department || null,
-          agencyId: agencyId,
-          firmId: row.firm_id || null,
-        },
+      contactsToCreate.push({
+        id: row.id,
+        firstName: row.first_name,
+        lastName: row.last_name,
+        email: row.email || null,
+        phone: row.phone || null,
+        title: row.title || null,
+        emailType: row.email_type || null,
+        contactFormUrl: row.contact_form_url || null,
+        department: row.department || null,
+        agencyId: row.agency_id!,
+        firmId: row.firm_id || null,
       });
-      contactsImported++;
-    } catch (error) {
-      console.error(`Error importing contact ${row.first_name} ${row.last_name}:`, error);
+    }
+
+    if (contactsToCreate.length > 0) {
+      try {
+        await prisma.contact.createMany({
+          data: contactsToCreate,
+          skipDuplicates: true,
+        });
+        contactsImported += contactsToCreate.length;
+        console.log(`  Batch ${Math.floor(i / batchSize) + 1}: ${contactsToCreate.length} contacts`);
+      } catch (error) {
+        console.error(`Error importing batch:`, error);
+        contactsFailed += contactsToCreate.length;
+      }
     }
   }
   
-  console.log(`Imported ${contactsImported}/${contactRows.length} contacts`);
-  console.log(`  ${contactsWithoutAgency} contacts without matching agency (handled gracefully)\n`);
+  console.log(`Imported ${contactsImported}/${contactRows.length} contacts (only those with valid agencies)`);
+  console.log(`  ${contactsSkipped} contacts skipped (no matching agency)`);
+  if (contactsFailed > 0) {
+    console.log(`  ${contactsFailed} contacts failed to import\n`);
+  } else {
+    console.log();
+  }
 
   console.log('Database seed completed successfully!');
 }
