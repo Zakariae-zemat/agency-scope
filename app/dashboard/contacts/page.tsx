@@ -29,8 +29,8 @@ export default async function ContactsPage(props: PageProps) {
             OR: [
               { firstName: { contains: search, mode: 'insensitive' as const } },
               { lastName: { contains: search, mode: 'insensitive' as const } },
+              { email: { contains: search, mode: 'insensitive' as const } },
               { title: { contains: search, mode: 'insensitive' as const } },
-              { department: { contains: search, mode: 'insensitive' as const } },
             ],
           }
         : {},
@@ -47,18 +47,10 @@ export default async function ContactsPage(props: PageProps) {
   const [contacts, total] = await Promise.all([
     prisma.contact.findMany({
       where,
-      take: pageSize,
       skip: (page - 1) * pageSize,
-      orderBy: [{ firstName: 'asc' }, { lastName: 'asc' }],
-      select: {
-        id: true,
-        firstName: true,
-        lastName: true,
-        email: true,
-        phone: true,
-        title: true,
-        department: true,
-        contactFormUrl: true,
+      take: pageSize,
+      orderBy: [{ lastName: 'asc' }, { firstName: 'asc' }],
+      include: {
         agency: {
           select: {
             id: true,
@@ -71,11 +63,13 @@ export default async function ContactsPage(props: PageProps) {
     prisma.contact.count({ where }),
   ]);
 
-  // Get contact IDs that user has viewed
+  // Get contacts viewed today by this user
   const viewedContactIds = await prisma.contactView.findMany({
     where: {
       userId: user.id,
-      contactId: { in: contacts.map((c) => c.id) },
+      viewedAt: {
+        gte: new Date(new Date().setHours(0, 0, 0, 0)),
+      },
     },
     select: { contactId: true },
   });
@@ -89,7 +83,7 @@ export default async function ContactsPage(props: PageProps) {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Contacts</h1>
-          <p className="text-slate-600 mt-2">
+          <p className="text-slate-600 dark:text-slate-400 mt-2">
             Browse {total.toLocaleString()} verified contacts
           </p>
         </div>
@@ -97,7 +91,7 @@ export default async function ContactsPage(props: PageProps) {
           <div className="text-2xl font-bold">
             {viewStats.remaining}/50
           </div>
-          <div className="text-sm text-slate-600">views remaining</div>
+          <div className="text-sm text-slate-600 dark:text-slate-400">views remaining</div>
         </div>
       </div>
 

@@ -4,19 +4,20 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { UserButton } from '@clerk/nextjs';
 import { Building2, Users, LayoutDashboard, TrendingUp } from 'lucide-react';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'Agencies', href: '/agencies', icon: Building2 },
-  { name: 'Contacts', href: '/contacts', icon: Users },
-  { name: 'Upgrade', href: '/upgrade', icon: TrendingUp },
+  { name: 'Agencies', href: '/dashboard/agencies', icon: Building2 },
+  { name: 'Contacts', href: '/dashboard/contacts', icon: Users },
+  { name: 'Upgrade', href: '/dashboard/upgrade', icon: TrendingUp },
 ];
 
 export function DashboardNav() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-40 border-b bg-white">
+    <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between px-4">
         <div className="flex items-center gap-8">
           <Link href="/dashboard" className="flex items-center gap-2">
@@ -36,7 +37,7 @@ export function DashboardNav() {
                   className={`flex items-center gap-2 text-sm font-medium transition-colors ${
                     isActive
                       ? 'text-blue-600'
-                      : 'text-slate-600 hover:text-slate-900'
+                      : 'text-muted-foreground hover:text-foreground'
                   }`}
                 >
                   <Icon className="h-4 w-4" />
@@ -47,7 +48,10 @@ export function DashboardNav() {
           </nav>
         </div>
 
-        <UserButton afterSignOutUrl="/" />
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <UserButton afterSignOutUrl="/" />
+        </div>
       </div>
     </header>
   );

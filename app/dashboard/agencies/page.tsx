@@ -29,19 +29,10 @@ export default async function AgenciesPage(props: PageProps) {
   const [agencies, total] = await Promise.all([
     prisma.agency.findMany({
       where,
-      take: pageSize,
       skip: (page - 1) * pageSize,
+      take: pageSize,
       orderBy: { name: 'asc' },
-      select: {
-        id: true,
-        name: true,
-        state: true,
-        stateCode: true,
-        type: true,
-        population: true,
-        website: true,
-        county: true,
-        phone: true,
+      include: {
         _count: {
           select: { contacts: true },
         },
@@ -64,7 +55,7 @@ export default async function AgenciesPage(props: PageProps) {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Agencies</h1>
-        <p className="text-slate-600 mt-2">
+        <p className="text-slate-600 dark:text-slate-400 mt-2">
           Browse {total.toLocaleString()} verified government agencies
         </p>
       </div>

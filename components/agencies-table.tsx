@@ -13,8 +13,9 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { ChevronLeft, ChevronRight, ExternalLink, Search, Users } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ExternalLink, Search, Users, Download } from 'lucide-react';
 import { useState, useTransition } from 'react';
+import { exportAgenciesToCSV } from '@/lib/export';
 
 interface Agency {
   id: string;
@@ -80,15 +81,28 @@ export function AgenciesTable({
     });
   };
 
+  const handleExport = async () => {
+    startTransition(async () => {
+      const csv = await exportAgenciesToCSV({ search, state: selectedState });
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `agencies-${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    });
+  };
+
   return (
     <div className="space-y-4">
       {/* Filters */}
       <Card>
         <CardContent className="pt-6">
-          <div className="flex flex-col gap-4 md:flex-row">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div className="flex flex-1 gap-2">
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   placeholder="Search agencies or counties..."
                   value={search}
@@ -102,18 +116,25 @@ export function AgenciesTable({
               </Button>
             </div>
 
-            <select
-              value={selectedState}
-              onChange={(e) => handleStateChange(e.target.value)}
-              className="h-10 rounded-md border border-slate-200 bg-white px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">All States</option>
-              {states.map((state) => (
-                <option key={state} value={state}>
-                  {state}
-                </option>
-              ))}
-            </select>
+            <div className="flex gap-2">
+              <select
+                value={selectedState}
+                onChange={(e) => handleStateChange(e.target.value)}
+                className="h-10 rounded-md border border-input bg-background px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+              >
+                <option value="">All States</option>
+                {states.map((state) => (
+                  <option key={state} value={state}>
+                    {state}
+                  </option>
+                ))}
+              </select>
+              
+              <Button variant="outline" onClick={handleExport} disabled={isPending}>
+                <Download className="h-4 w-4 mr-2" />
+                Export CSV
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>

@@ -3,8 +3,13 @@
 import { requireAuth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
+import { trackViewSchema } from '@/lib/schemas';
+import { z } from 'zod';
 
 export async function trackContactView(contactId: string) {
+  // Validate input
+  const validated = trackViewSchema.parse({ contactId });
+  
   const user = await requireAuth();
 
   const today = new Date();

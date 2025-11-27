@@ -20,9 +20,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { ChevronLeft, ChevronRight, Search, Eye, EyeOff, ExternalLink, TrendingUp } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Search, Eye, EyeOff, ExternalLink, TrendingUp, Download } from 'lucide-react';
 import { useState, useTransition } from 'react';
 import { trackContactView } from '@/lib/actions';
+import { exportContactsToCSV } from '@/lib/export';
 import Link from 'next/link';
 
 interface Contact {
@@ -83,6 +84,19 @@ export function ContactsTable({
     });
   };
 
+  const handleExport = async () => {
+    startTransition(async () => {
+      const csv = await exportContactsToCSV({ search });
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `contacts-${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    });
+  };
+
   const handleViewContact = async (contactId: string) => {
     if (remainingViews === 0) {
       setShowUpgradeModal(true);
@@ -110,22 +124,29 @@ export function ContactsTable({
   return (
     <>
       <div className="space-y-4">
-        {/* Search */}
+        {/* Filters */}
         <Card>
           <CardContent className="pt-6">
-            <div className="flex gap-2">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                <Input
-                  placeholder="Search contacts by name, title, or department..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                  className="pl-9"
-                />
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+              <div className="flex flex-1 gap-2">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <Input
+                    placeholder="Search contacts by name, title, or department..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                    className="pl-9"
+                  />
+                </div>
+                <Button onClick={handleSearch} disabled={isPending}>
+                  Search
+                </Button>
               </div>
-              <Button onClick={handleSearch} disabled={isPending}>
-                Search
+              
+              <Button variant="outline" onClick={handleExport} disabled={isPending}>
+                <Download className="h-4 w-4 mr-2" />
+                Export CSV
               </Button>
             </div>
           </CardContent>
