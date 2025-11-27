@@ -192,7 +192,9 @@ export function ContactsTable({
                                 {contact.firstName} {contact.lastName}
                               </div>
                               {isViewed && (
-                                <EyeOff className="h-4 w-4 text-slate-400" title="Already viewed" />
+                                <span title="Already viewed">
+                                  <EyeOff className="h-4 w-4 text-slate-400" />
+                                </span>
                               )}
                             </div>
                           </TableCell>
