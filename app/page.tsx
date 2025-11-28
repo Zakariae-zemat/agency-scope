@@ -1,5 +1,6 @@
 "use client"
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 
 export default function Home() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -89,14 +90,14 @@ export default function Home() {
             </span>
           </div>
           <nav className="flex items-center gap-6">
-            <button className="relative px-6 py-2.5 text-sm font-medium text-white/80 hover:text-white transition-colors group">
+            <Link href="/sign-in" className="relative px-6 py-2.5 text-sm font-medium text-white/80 hover:text-white transition-colors group">
               Sign In
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-cyan-400 group-hover:w-full transition-all duration-300" />
-            </button>
-            <button className="relative px-6 py-2.5 text-sm font-bold text-white rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 transform hover:scale-105 transition-all duration-300 shadow-lg shadow-blue-500/50">
+            </Link>
+            <Link href="/sign-up" className="relative px-6 py-2.5 text-sm font-bold text-white rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 transform hover:scale-105 transition-all duration-300 shadow-lg shadow-blue-500/50 block">
               Get Started
               <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-400 to-cyan-400 opacity-0 hover:opacity-20 transition-opacity duration-300" />
-            </button>
+            </Link>
           </nav>
         </div>
       </header>
