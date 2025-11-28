@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { AgenciesTable } from '@/components/agencies-table';
+import { PageTransition } from '@/components/page-transition';
 
 interface PageProps {
   searchParams: Promise<{ page?: string; search?: string; state?: string }>;
@@ -29,10 +30,19 @@ export default async function AgenciesPage(props: PageProps) {
   const [agencies, total] = await Promise.all([
     prisma.agency.findMany({
       where,
-      skip: (page - 1) * pageSize,
       take: pageSize,
+      skip: (page - 1) * pageSize,
       orderBy: { name: 'asc' },
-      include: {
+      select: {
+        id: true,
+        name: true,
+        state: true,
+        stateCode: true,
+        type: true,
+        population: true,
+        website: true,
+        county: true,
+        phone: true,
         _count: {
           select: { contacts: true },
         },
@@ -52,7 +62,7 @@ export default async function AgenciesPage(props: PageProps) {
   });
 
   return (
-    <div className="space-y-6 px-4">
+    <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Agencies</h1>
         <p className="text-slate-600 dark:text-slate-400 mt-2">

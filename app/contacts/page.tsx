@@ -2,6 +2,7 @@ import { getCurrentUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { ContactsTable } from '@/components/contacts-table';
 import { getTodayViewCount } from '@/lib/actions';
+import { PageTransition } from '@/components/page-transition';
 
 interface PageProps {
   searchParams: Promise<{ page?: string; search?: string; agency?: string }>;
@@ -29,8 +30,8 @@ export default async function ContactsPage(props: PageProps) {
             OR: [
               { firstName: { contains: search, mode: 'insensitive' as const } },
               { lastName: { contains: search, mode: 'insensitive' as const } },
-              { email: { contains: search, mode: 'insensitive' as const } },
               { title: { contains: search, mode: 'insensitive' as const } },
+              { department: { contains: search, mode: 'insensitive' as const } },
             ],
           }
         : {},
@@ -47,10 +48,18 @@ export default async function ContactsPage(props: PageProps) {
   const [contacts, total] = await Promise.all([
     prisma.contact.findMany({
       where,
-      skip: (page - 1) * pageSize,
       take: pageSize,
-      orderBy: [{ lastName: 'asc' }, { firstName: 'asc' }],
-      include: {
+      skip: (page - 1) * pageSize,
+      orderBy: [{ firstName: 'asc' }, { lastName: 'asc' }],
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        phone: true,
+        title: true,
+        department: true,
+        contactFormUrl: true,
         agency: {
           select: {
             id: true,
@@ -63,13 +72,11 @@ export default async function ContactsPage(props: PageProps) {
     prisma.contact.count({ where }),
   ]);
 
-  // Get contacts viewed today by this user
+  // Get contact IDs that user has viewed
   const viewedContactIds = await prisma.contactView.findMany({
     where: {
       userId: user.id,
-      viewedAt: {
-        gte: new Date(new Date().setHours(0, 0, 0, 0)),
-      },
+      contactId: { in: contacts.map((c) => c.id) },
     },
     select: { contactId: true },
   });
@@ -79,7 +86,7 @@ export default async function ContactsPage(props: PageProps) {
   const totalPages = Math.ceil(total / pageSize);
 
   return (
-    <div className="space-y-6 px-4">
+    <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Contacts</h1>

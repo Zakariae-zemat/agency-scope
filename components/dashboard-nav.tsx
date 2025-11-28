@@ -1,10 +1,11 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { UserButton } from '@clerk/nextjs';
-import { Building2, Users, LayoutDashboard, TrendingUp } from 'lucide-react';
-import { ThemeToggle } from '@/components/theme-toggle';
+import { useTheme } from 'next-themes';
+import { Building2, Users, LayoutDashboard, TrendingUp, Menu, X, Sparkles, Moon, Sun } from 'lucide-react';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -15,17 +16,110 @@ const navigation = [
 
 export function DashboardNav() {
   const pathname = usePathname();
+  const { theme, setTheme } = useTheme();
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
-    <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between px-4">
-        <div className="flex items-center gap-8">
-          <Link href="/dashboard" className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-blue-600 to-blue-700" />
-            <span className="text-xl font-bold">AgencyScope</span>
-          </Link>
-          
-          <nav className="hidden md:flex items-center gap-6">
+    <>
+      <header 
+        className={`sticky top-0 z-50 transition-all duration-500 ${
+          scrolled 
+            ? 'bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl border-b-2 border-slate-200 dark:border-slate-800 shadow-lg shadow-slate-200/50 dark:shadow-slate-900/50' 
+            : 'bg-white dark:bg-slate-900 border-b-2 border-slate-100 dark:border-slate-800'
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex h-20 items-center justify-between">
+            {/* Logo */}
+            <Link href="/dashboard" className="group">
+              <span className="text-3xl font-black bg-gradient-to-r from-cyan-500 to-cyan-700 dark:from-cyan-400 dark:to-cyan-600 bg-clip-text text-transparent hover:from-cyan-600 hover:to-cyan-800 dark:hover:from-cyan-300 dark:hover:to-cyan-500 transition-all duration-300" style={{ fontFamily: 'serif' }}>
+                AgencyScope
+              </span>
+            </Link>
+
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center gap-2">
+              {navigation.map((item) => {
+                const Icon = item.icon;
+                const isActive = pathname === item.href;
+                
+                return (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className="relative group"
+                  >
+                    <div
+                      className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm transition-all duration-300 ${
+                        isActive
+                          ? 'text-white bg-slate-900 shadow-lg shadow-slate-900/30'
+                          : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                      }`}
+                    >
+                      <Icon className="h-4 w-4" strokeWidth={2.5} />
+                      {item.name}
+                    </div>
+                  </Link>
+                );
+              })}
+            </nav>
+
+            {/* Right Side Actions */}
+            <div className="flex items-center gap-3">
+              {/* Theme Toggle Button */}
+              {mounted && (
+                <button 
+                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                  className="hidden md:flex items-center justify-center w-11 h-11 rounded-xl border-2 border-slate-200 dark:border-slate-700 hover:border-slate-900 dark:hover:border-slate-400 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all duration-300 hover:scale-110"
+                  aria-label="Toggle theme"
+                >
+                  {theme === 'dark' ? (
+                    <Sun className="w-5 h-5 text-slate-300" strokeWidth={2.5} />
+                  ) : (
+                    <Moon className="w-5 h-5 text-slate-700" strokeWidth={2.5} />
+                  )}
+                </button>
+              )}
+
+              {/* User Button */}
+              <div className="hidden md:flex items-center justify-center">
+                <UserButton afterSignOutUrl="/" />
+              </div>
+
+              {/* Mobile Menu Button */}
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="md:hidden flex items-center justify-center w-11 h-11 rounded-xl border-2 border-slate-200 hover:border-slate-900 bg-white hover:bg-slate-50 transition-all duration-300"
+                aria-label="Toggle menu"
+              >
+                {mobileMenuOpen ? (
+                  <X className="w-5 h-5 text-slate-900" strokeWidth={2.5} />
+                ) : (
+                  <Menu className="w-5 h-5 text-slate-900" strokeWidth={2.5} />
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Menu */}
+        <div
+          className={`md:hidden overflow-hidden transition-all duration-500 ease-in-out ${
+            mobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+          }`}
+        >
+          <nav className="px-6 py-6 space-y-3 bg-slate-50 border-t-2 border-slate-100">
             {navigation.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
@@ -34,25 +128,50 @@ export function DashboardNav() {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`flex items-center gap-2 text-sm font-medium transition-colors ${
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`flex items-center gap-3 px-5 py-4 rounded-2xl font-bold text-base transition-all duration-300 ${
                     isActive
-                      ? 'text-blue-600'
-                      : 'text-muted-foreground hover:text-foreground'
+                      ? 'text-white bg-slate-900 shadow-lg shadow-slate-900/20'
+                      : 'text-slate-600 hover:text-slate-900 bg-white hover:bg-slate-100 border-2 border-slate-200'
                   }`}
                 >
-                  <Icon className="h-4 w-4" />
+                  <div className={`p-2 rounded-lg ${
+                    isActive ? 'bg-white/20' : 'bg-slate-100'
+                  }`}>
+                    <Icon className="h-5 w-5" strokeWidth={2.5} />
+                  </div>
                   {item.name}
                 </Link>
               );
             })}
+
+            {/* Mobile Theme Toggle */}
+            {mounted && (
+              <button 
+                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                className="flex items-center gap-3 w-full px-5 py-4 rounded-2xl font-bold text-base text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 transition-all duration-300"
+              >
+                <div className="p-2 rounded-lg bg-slate-100 dark:bg-slate-700">
+                  {theme === 'dark' ? (
+                    <Sun className="w-5 h-5" strokeWidth={2.5} />
+                  ) : (
+                    <Moon className="w-5 h-5" strokeWidth={2.5} />
+                  )}
+                </div>
+                {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+              </button>
+            )}
           </nav>
         </div>
+      </header>
 
-        <div className="flex items-center gap-2">
-          <ThemeToggle />
-          <UserButton afterSignOutUrl="/" />
-        </div>
-      </div>
-    </header>
+      {/* Backdrop for mobile menu */}
+      {mobileMenuOpen && (
+        <div
+          className="md:hidden fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-40"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+    </>
   );
 }

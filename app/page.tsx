@@ -30,7 +30,7 @@ export default function Home() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900">
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 dark:from-slate-950 dark:via-blue-950 dark:to-slate-900">
       {/* Animated Background Grid */}
       <div className="fixed inset-0 opacity-20">
         <div className="absolute inset-0" style={{
@@ -72,7 +72,7 @@ export default function Home() {
       </div>
 
       {/* Glassmorphic Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 backdrop-blur-xl bg-slate-950/50">
+      <header className="fixed top-0 left-0 right-0 z-50 border-b border-slate-200 dark:border-white/10 backdrop-blur-xl bg-white/80 dark:bg-slate-950/50">
         <div className="container mx-auto flex h-20 items-center justify-between px-6">
           <div className="flex items-center gap-3 group cursor-pointer">
             <div className="relative">
@@ -83,14 +83,14 @@ export default function Home() {
                 </svg>
               </div>
             </div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+            <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 dark:from-blue-400 dark:to-cyan-400 bg-clip-text text-transparent">
               AgencyScope
             </span>
           </div>
           <nav className="flex items-center gap-6">
-            <Link href="/sign-in" className="relative px-6 py-2.5 text-sm font-medium text-white/80 hover:text-white transition-colors group">
+            <Link href="/sign-in" className="relative px-6 py-2.5 text-sm font-medium text-slate-700 dark:text-white/80 hover:text-slate-900 dark:hover:text-white transition-colors group">
               Sign In
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-cyan-400 group-hover:w-full transition-all duration-300" />
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-cyan-600 dark:from-blue-400 dark:to-cyan-400 group-hover:w-full transition-all duration-300" />
             </Link>
             <Link href="/sign-up" className="relative px-6 py-2.5 text-sm font-bold text-white rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 transform hover:scale-105 transition-all duration-300 shadow-lg shadow-blue-500/50 block">
               Get Started
