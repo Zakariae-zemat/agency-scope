@@ -1,4 +1,4 @@
-# AgencyScope 🎯
+# AgencyScope
 
 > **A production-quality SaaS platform for accessing government agency and contact intelligence**
 
@@ -11,7 +11,7 @@ AgencyScope is a modern contact intelligence platform that provides authenticate
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [Features](#-features)
 - [Tech Stack](#-tech-stack)
@@ -26,31 +26,31 @@ AgencyScope is a modern contact intelligence platform that provides authenticate
 
 ---
 
-## ✨ Features
+## Features
 
 ### Core Functionality
-- 🔐 **Secure Authentication** - Clerk-powered auth with middleware protection
-- 🏛️ **Agency Directory** - Browse 900+ verified government agencies
-- 👥 **Contact Database** - Access 1000+ key decision-makers
-- 📊 **Smart Dashboard** - Real-time stats and quick actions
-- 🔍 **Advanced Search** - Filter by name, state, department, and more
-- 📄 **Pagination** - Smooth navigation through large datasets
+- **Secure Authentication** - Clerk-powered auth with middleware protection
+- **Agency Directory** - Browse 900+ verified government agencies
+- **Contact Database** - Access 1000+ key decision-makers
+- **Smart Dashboard** - Real-time stats and quick actions
+- **Advanced Search** - Filter by name, state, department, and more
+- **Pagination** - Smooth navigation through large datasets
 
 ### Daily Limit System
-- ⚡ **50 Views/Day** - Free tier with daily contact view limits
-- 📈 **Usage Tracking** - Real-time remaining views counter
-- 🔔 **Smart Alerts** - Warning when approaching limit
-- 🚀 **Upgrade Modal** - Seamless upgrade prompts when limit reached
+- **50 Views/Day** - Free tier with daily contact view limits
+- **Usage Tracking** - Real-time remaining views counter
+- **Smart Alerts** - Warning when approaching limit
+- **Upgrade Modal** - Seamless upgrade prompts when limit reached
 
 ### UX/UI
-- 🎨 **Modern Design** - Clean, professional SaaS aesthetic
-- 📱 **Fully Responsive** - Works on all devices
-- ⚡ **Fast Performance** - Optimized with Next.js 16 App Router
-- 🎯 **Intuitive Navigation** - Clear user flows and CTAs
+- **Modern Design** - Clean, professional SaaS aesthetic
+- **Fully Responsive** - Works on all devices
+- **Fast Performance** - Optimized with Next.js 16 App Router
+- **Intuitive Navigation** - Clear user flows and CTAs
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
 | Category | Technology |
 |----------|-----------|
@@ -66,7 +66,7 @@ AgencyScope is a modern contact intelligence platform that provides authenticate
 
 ---
 
-## 🏗 Architecture
+## Architecture
 
 AgencyScope follows a modern, scalable architecture:
 
@@ -85,7 +85,7 @@ See [detailed architecture documentation](./docs/architecture.md) for more infor
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -159,7 +159,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
-## 🔐 Environment Variables
+## Environment Variables
 
 ### Required Variables
 
@@ -180,7 +180,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
-## 💾 Database Setup
+## Database Setup
 
 ### Neon Configuration
 
@@ -212,7 +212,7 @@ npm run db:studio
 
 ---
 
-## 💻 Development
+## Development
 
 ### Available Scripts
 
@@ -263,7 +263,7 @@ prisma/
 
 ---
 
-## 🚀 Deployment
+## Deployment
 
 ### Deploy to Vercel (Recommended)
 
@@ -295,7 +295,7 @@ npx prisma db seed
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ### Key Files
 
@@ -317,7 +317,7 @@ npx prisma db seed
 
 ---
 
-## 🎯 Key Features Implementation
+## Key Features Implementation
 
 ### Daily View Limit
 
@@ -375,7 +375,7 @@ Server Components with URL-based state:
 
 ---
 
-## 📸 Screenshots
+## Screenshots
 
 ### Landing Page
 Clean, modern landing page with clear value proposition and CTA buttons.
@@ -394,7 +394,7 @@ Appears when daily limit is reached, encouraging users to upgrade.
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 This is a portfolio/assessment project, but feedback is welcome!
 
@@ -403,22 +403,15 @@ This is a portfolio/assessment project, but feedback is welcome!
 3. Make your changes
 4. Submit a pull request
 
----
 
-## 📝 License
-
-MIT License - feel free to use this project for learning or portfolio purposes.
-
----
-
-## 👨‍💻 Author
+## Author
 
 **Zakariae Zemat**
 - GitHub: [@Zakariae-zemat](https://github.com/Zakariae-zemat)
 
 ---
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Next.js team for the amazing framework
 - Clerk for seamless authentication

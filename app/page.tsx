@@ -1,13 +1,14 @@
-'use client';
-
+"use client"
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
 
 export default function Home() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [scrollY, setScrollY] = useState(0);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+    
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
     };
@@ -25,14 +26,14 @@ export default function Home() {
     };
   }, []);
 
-  const parallaxStyle = {
+  const parallaxStyle = mounted ? {
     transform: `translateY(${scrollY * 0.5}px)`,
-  };
+  } : {};
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 dark:from-slate-950 dark:via-blue-950 dark:to-slate-900">
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900">
       {/* Animated Background Grid */}
-      <div className="fixed inset-0 opacity-20">
+      <div className="absolute inset-0 opacity-20 pointer-events-none">
         <div className="absolute inset-0" style={{
           backgroundImage: `
             linear-gradient(to right, rgb(59 130 246 / 0.1) 1px, transparent 1px),
@@ -45,7 +46,7 @@ export default function Home() {
       </div>
 
       {/* Gradient Orbs */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div 
           className="absolute -top-40 -right-40 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"
           style={{
@@ -72,7 +73,7 @@ export default function Home() {
       </div>
 
       {/* Glassmorphic Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 border-b border-slate-200 dark:border-white/10 backdrop-blur-xl bg-white/80 dark:bg-slate-950/50">
+      <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 backdrop-blur-xl bg-slate-950/50">
         <div className="container mx-auto flex h-20 items-center justify-between px-6">
           <div className="flex items-center gap-3 group cursor-pointer">
             <div className="relative">
@@ -83,27 +84,27 @@ export default function Home() {
                 </svg>
               </div>
             </div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 dark:from-blue-400 dark:to-cyan-400 bg-clip-text text-transparent">
+            <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
               AgencyScope
             </span>
           </div>
           <nav className="flex items-center gap-6">
-            <Link href="/sign-in" className="relative px-6 py-2.5 text-sm font-medium text-slate-700 dark:text-white/80 hover:text-slate-900 dark:hover:text-white transition-colors group">
+            <button className="relative px-6 py-2.5 text-sm font-medium text-white/80 hover:text-white transition-colors group">
               Sign In
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-cyan-600 dark:from-blue-400 dark:to-cyan-400 group-hover:w-full transition-all duration-300" />
-            </Link>
-            <Link href="/sign-up" className="relative px-6 py-2.5 text-sm font-bold text-white rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 transform hover:scale-105 transition-all duration-300 shadow-lg shadow-blue-500/50 block">
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-cyan-400 group-hover:w-full transition-all duration-300" />
+            </button>
+            <button className="relative px-6 py-2.5 text-sm font-bold text-white rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 transform hover:scale-105 transition-all duration-300 shadow-lg shadow-blue-500/50">
               Get Started
               <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-400 to-cyan-400 opacity-0 hover:opacity-20 transition-opacity duration-300" />
-            </Link>
+            </button>
           </nav>
         </div>
       </header>
 
       {/* Hero Section */}
       <main className="relative">
-        <section className="container mx-auto px-6 pt-40 pb-32">
-          <div className="mx-auto max-w-5xl text-center" style={parallaxStyle}>
+        <section className="relative z-20 container mx-auto px-6 pt-40 pb-32">
+          <div className="relative z-20 mx-auto max-w-5xl text-center">
             {/* Badge */}
             <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 px-5 py-2 backdrop-blur-sm animate-fade-in">
               <span className="relative flex h-2 w-2">
@@ -170,8 +171,8 @@ export default function Home() {
         </section>
 
         {/* Features Section */}
-        <section className="relative py-32 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-950/30 to-transparent" />
+        <section className="relative pt-40 pb-32 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-950/30 to-transparent pointer-events-none" />
           
           <div className="container mx-auto px-6 relative z-10">
             <div className="text-center mb-20">
