@@ -5,16 +5,20 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { UserButton } from '@clerk/nextjs';
 import { useTheme } from 'next-themes';
-import { Building2, Users, LayoutDashboard, TrendingUp, Menu, X, Sparkles, Moon, Sun } from 'lucide-react';
+import { Building2, Users, LayoutDashboard, TrendingUp, Menu, X, Sparkles, Moon, Sun, Shield } from 'lucide-react';
 
-const navigation = [
+const baseNavigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
   { name: 'Agencies', href: '/dashboard/agencies', icon: Building2 },
   { name: 'Contacts', href: '/dashboard/contacts', icon: Users },
   { name: 'Upgrade', href: '/dashboard/upgrade', icon: TrendingUp },
 ];
 
-export function DashboardNav() {
+interface DashboardNavProps {
+  isAdmin?: boolean;
+}
+
+export function DashboardNav({ isAdmin = false }: DashboardNavProps) {
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
   const [scrolled, setScrolled] = useState(false);
@@ -50,7 +54,7 @@ export function DashboardNav() {
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center gap-2">
-              {navigation.map((item) => {
+              {baseNavigation.map((item) => {
                 const Icon = item.icon;
                 const isActive = pathname === item.href;
                 
@@ -63,8 +67,8 @@ export function DashboardNav() {
                     <div
                       className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm transition-all duration-300 ${
                         isActive
-                          ? 'text-white bg-slate-900 shadow-lg shadow-slate-900/30'
-                          : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                          ? 'text-white dark:text-white bg-slate-900 dark:bg-slate-800 shadow-lg shadow-slate-900/30'
+                          : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800'
                       }`}
                     >
                       <Icon className="h-4 w-4" strokeWidth={2.5} />
@@ -73,6 +77,25 @@ export function DashboardNav() {
                   </Link>
                 );
               })}
+              
+              {/* Admin Panel Link - Only visible to admins */}
+              {isAdmin && (
+                <Link
+                  href="/admin/metrics"
+                  className="relative group"
+                >
+                  <div
+                    className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm transition-all duration-300 border ${
+                      pathname.startsWith('/admin')
+                        ? 'text-cyan-600 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-950/30 border-cyan-200 dark:border-cyan-800 shadow-sm'
+                        : 'text-slate-600 dark:text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-400 border-slate-200 dark:border-slate-700 hover:bg-cyan-50 dark:hover:bg-cyan-950/20 hover:border-cyan-200 dark:hover:border-cyan-800'
+                    }`}
+                  >
+                    <Shield className="h-4 w-4" strokeWidth={2.5} />
+                    Admin Panel
+                  </div>
+                </Link>
+              )}
             </nav>
 
             {/* Right Side Actions */}
@@ -119,8 +142,8 @@ export function DashboardNav() {
             mobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
           }`}
         >
-          <nav className="px-6 py-6 space-y-3 bg-slate-50 border-t-2 border-slate-100">
-            {navigation.map((item) => {
+          <nav className="px-6 py-6 space-y-3 bg-slate-50 dark:bg-slate-900 border-t-2 border-slate-100 dark:border-slate-800">
+            {baseNavigation.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
               
@@ -131,12 +154,12 @@ export function DashboardNav() {
                   onClick={() => setMobileMenuOpen(false)}
                   className={`flex items-center gap-3 px-5 py-4 rounded-2xl font-bold text-base transition-all duration-300 ${
                     isActive
-                      ? 'text-white bg-slate-900 shadow-lg shadow-slate-900/20'
-                      : 'text-slate-600 hover:text-slate-900 bg-white hover:bg-slate-100 border-2 border-slate-200'
+                      ? 'text-white bg-slate-900 dark:bg-slate-800 shadow-lg shadow-slate-900/20'
+                      : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border-2 border-slate-200 dark:border-slate-700'
                   }`}
                 >
                   <div className={`p-2 rounded-lg ${
-                    isActive ? 'bg-white/20' : 'bg-slate-100'
+                    isActive ? 'bg-white/20' : 'bg-slate-100 dark:bg-slate-700'
                   }`}>
                     <Icon className="h-5 w-5" strokeWidth={2.5} />
                   </div>
@@ -144,6 +167,26 @@ export function DashboardNav() {
                 </Link>
               );
             })}
+            
+            {/* Admin Panel - Mobile */}
+            {isAdmin && (
+              <Link
+                href="/admin/metrics"
+                onClick={() => setMobileMenuOpen(false)}
+                className={`flex items-center gap-3 px-5 py-4 rounded-2xl font-bold text-base transition-all duration-300 border-2 ${
+                  pathname.startsWith('/admin')
+                    ? 'text-cyan-600 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-950/30 border-cyan-200 dark:border-cyan-800 shadow-sm'
+                    : 'text-slate-600 dark:text-slate-400 bg-white dark:bg-slate-800 hover:text-cyan-600 dark:hover:text-cyan-400 hover:bg-cyan-50 dark:hover:bg-cyan-950/20 border-slate-200 dark:border-slate-700 hover:border-cyan-200 dark:hover:border-cyan-800'
+                }`}
+              >
+                <div className={`p-2 rounded-lg ${
+                  pathname.startsWith('/admin') ? 'bg-cyan-100 dark:bg-cyan-900/50' : 'bg-slate-100 dark:bg-slate-700'
+                }`}>
+                  <Shield className="h-5 w-5" strokeWidth={2.5} />
+                </div>
+                Admin Panel
+              </Link>
+            )}
 
             {/* Mobile Theme Toggle */}
             {mounted && (
