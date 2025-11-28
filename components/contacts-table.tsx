@@ -144,9 +144,14 @@ export function ContactsTable({
                 </Button>
               </div>
               
-              <Button variant="outline" onClick={handleExport} disabled={isPending}>
+              <Button 
+                variant="outline" 
+                onClick={handleExport} 
+                disabled={isPending}
+                title="Export only contacts you've viewed today"
+              >
                 <Download className="h-4 w-4 mr-2" />
-                Export CSV
+                Export Viewed
               </Button>
             </div>
           </CardContent>

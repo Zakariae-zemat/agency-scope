@@ -56,10 +56,25 @@ export async function exportAgenciesToCSV(filters?: { search?: string; state?: s
 }
 
 export async function exportContactsToCSV(filters?: { search?: string; agency?: string }) {
-  await requireAuth();
+  const user = await requireAuth();
 
+  // Get all contacts the user has viewed (respecting the 50/day limit)
+  const viewedContactIds = await prisma.contactView.findMany({
+    where: {
+      userId: user.id,
+      viewedAt: {
+        gte: new Date(new Date().setHours(0, 0, 0, 0)),
+      },
+    },
+    select: { contactId: true },
+  });
+
+  const viewedIds = viewedContactIds.map(v => v.contactId);
+
+  // Only export contacts the user has already viewed today
   const where = {
     AND: [
+      { id: { in: viewedIds } }, // ONLY viewed contacts
       filters?.search
         ? {
             OR: [
