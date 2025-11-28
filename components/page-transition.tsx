@@ -15,7 +15,7 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
       animate="enter"
       exit="exit"
       variants={variants}
-      transition={{ duration: 0.3, type: 'easeInOut' }}
+      transition={{ duration: 0.3, ease: 'easeInOut' }}
     >
       {children}
     </motion.div>
