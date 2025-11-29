@@ -83,9 +83,15 @@ export default async function AdminMetricsPage() {
 
   return (
     <div className="space-y-8">
-      {/* Key Metrics Grid */}
+      {/* Page Header */}
       <div>
-        <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-4">
+        <h1 className="text-3xl font-black text-slate-900 dark:text-white mb-2">Detailed Metrics</h1>
+        <p className="text-slate-600 dark:text-slate-400">Comprehensive analytics and performance insights</p>
+      </div>
+
+      {/* Metrics Grid */}
+      <div>
+        <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4">
           Key Metrics
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -130,13 +136,13 @@ export default async function AdminMetricsPage() {
 
       {/* Top Viewed Contacts Table */}
       <div>
-        <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-4">
+        <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4">
           Top Viewed Contacts
         </h2>
-        <div className="rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden">
+        <div className="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+              <thead className="bg-slate-100 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-700">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
                     Rank
@@ -158,7 +164,7 @@ export default async function AdminMetricsPage() {
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
+              <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
                 {topContactsWithCounts.length === 0 ? (
                   <tr>
                     <td colSpan={6} className="px-6 py-8 text-center text-sm text-slate-500 dark:text-slate-500">
@@ -167,16 +173,16 @@ export default async function AdminMetricsPage() {
                   </tr>
                 ) : (
                   topContactsWithCounts.map((contact, index) => (
-                    <tr key={contact.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                    <tr key={contact.id} className="hover:bg-slate-100 dark:hover:bg-slate-700/30 transition-colors">
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center justify-center w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                          <span className="text-xs font-bold text-slate-600 dark:text-slate-400">
+                        <div className="flex items-center justify-center w-6 h-6 rounded-full bg-slate-200 dark:bg-slate-900/50 border border-slate-300 dark:border-slate-600">
+                          <span className="text-xs font-bold text-slate-600 dark:text-slate-300">
                             {index + 1}
                           </span>
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                        <div className="text-sm font-semibold text-slate-900 dark:text-white">
                           {contact.firstName} {contact.lastName}
                         </div>
                       </td>
@@ -196,7 +202,7 @@ export default async function AdminMetricsPage() {
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right">
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-bold bg-cyan-50 dark:bg-cyan-950/30 text-cyan-600 dark:text-cyan-400 border border-cyan-200 dark:border-cyan-800">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-bold bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
                           {contact.viewCount}
                         </span>
                       </td>

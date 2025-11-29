@@ -113,7 +113,7 @@ export function ContactsTable({
           <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex flex-1 gap-2">
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
                 <input
                   type="text"
                   placeholder="Search contacts by name, title, or department..."
@@ -207,20 +207,20 @@ export function ContactsTable({
               <table className="w-full">
                 <thead>
                   <tr className="border-b-2 border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800">
-                    <th className="px-6 py-4 text-left">
-                      <span className="text-xs font-black text-slate-600 uppercase tracking-wider">Name</span>
+                    <th className="py-4 px-4 text-left">
+                      <span className="text-xs font-black text-slate-600 dark:text-slate-400 uppercase tracking-wider">Name</span>
                     </th>
-                    <th className="px-6 py-4 text-left">
-                      <span className="text-xs font-black text-slate-600 uppercase tracking-wider">Title</span>
+                    <th className="py-4 px-4 text-left">
+                      <span className="text-xs font-black text-slate-600 dark:text-slate-400 uppercase tracking-wider">Title</span>
                     </th>
-                    <th className="px-6 py-4 text-left">
-                      <span className="text-xs font-black text-slate-600 uppercase tracking-wider">Agency</span>
+                    <th className="py-4 px-4 text-left">
+                      <span className="text-xs font-black text-slate-600 dark:text-slate-400 uppercase tracking-wider">Agency</span>
                     </th>
-                    <th className="px-6 py-4 text-left">
-                      <span className="text-xs font-black text-slate-600 uppercase tracking-wider">Department</span>
+                    <th className="py-4 px-4 text-left">
+                      <span className="text-xs font-black text-slate-600 dark:text-slate-400 uppercase tracking-wider">Department</span>
                     </th>
-                    <th className="px-6 py-4 text-right">
-                      <span className="text-xs font-black text-slate-600 uppercase tracking-wider">Actions</span>
+                    <th className="py-4 px-4 text-left">
+                      <span className="text-xs font-black text-slate-600 dark:text-slate-400 uppercase tracking-wider">Actions</span>
                     </th>
                   </tr>
                 </thead>
@@ -229,10 +229,10 @@ export function ContactsTable({
                     <tr>
                       <td colSpan={5} className="px-6 py-16 text-center">
                         <div className="flex flex-col items-center gap-3">
-                          <div className="p-4 bg-slate-100 rounded-full">
-                            <Search className="h-8 w-8 text-slate-400" strokeWidth={2} />
+                          <div className="p-4 bg-slate-100 dark:bg-slate-800 rounded-full">
+                            <Search className="h-8 w-8 text-slate-400 dark:text-slate-500" strokeWidth={2} />
                           </div>
-                          <p className="text-lg font-bold text-slate-400">No contacts found</p>
+                          <p className="text-lg font-bold text-slate-500 dark:text-slate-400">No contacts found</p>
                         </div>
                       </td>
                     </tr>
@@ -391,7 +391,7 @@ export function ContactsTable({
                 <button
                   onClick={() => goToPage(currentPage - 1)}
                   disabled={currentPage === 1 || isPending}
-                  className="flex items-center gap-2 px-4 py-2 rounded-xl border-2 border-slate-200 hover:border-slate-900 bg-white hover:bg-slate-50 font-bold transition-all duration-300 disabled:opacity-50 disabled:hover:border-slate-200"
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl border-2 border-slate-200 dark:border-slate-700 hover:border-slate-900 dark:hover:border-slate-500 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-bold transition-all duration-300 disabled:opacity-50 disabled:hover:border-slate-200 dark:disabled:hover:border-slate-700"
                 >
                   <ChevronLeft className="h-4 w-4" strokeWidth={2.5} />
                   Previous
@@ -416,8 +416,8 @@ export function ContactsTable({
                         disabled={isPending}
                         className={`min-w-[2.5rem] px-4 py-2 rounded-xl font-bold transition-all duration-300 ${
                           currentPage === pageNum
-                            ? 'bg-slate-900 text-white shadow-lg shadow-slate-900/30'
-                            : 'border-2 border-slate-200 hover:border-slate-900 bg-white hover:bg-slate-50'
+                            ? 'bg-slate-900 dark:bg-slate-700 text-white shadow-lg shadow-slate-900/30 dark:shadow-slate-700/30'
+                            : 'border-2 border-slate-200 dark:border-slate-700 hover:border-slate-900 dark:hover:border-slate-500 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-900 dark:text-white'
                         }`}
                       >
                         {pageNum}
@@ -428,7 +428,7 @@ export function ContactsTable({
                 <button
                   onClick={() => goToPage(currentPage + 1)}
                   disabled={currentPage === totalPages || isPending}
-                  className="flex items-center gap-2 px-4 py-2 rounded-xl border-2 border-slate-200 hover:border-slate-900 bg-white hover:bg-slate-50 font-bold transition-all duration-300 disabled:opacity-50 disabled:hover:border-slate-200"
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl border-2 border-slate-200 dark:border-slate-700 hover:border-slate-900 dark:hover:border-slate-500 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-bold transition-all duration-300 disabled:opacity-50 disabled:hover:border-slate-200 dark:disabled:hover:border-slate-700"
                 >
                   Next
                   <ChevronRight className="h-4 w-4" strokeWidth={2.5} />
@@ -545,8 +545,8 @@ export function ContactsTable({
           <div className="bg-white rounded-3xl max-w-md w-full shadow-2xl" onClick={(e) => e.stopPropagation()}>
             <div className="p-8 space-y-6">
               <div>
-                <h2 className="text-3xl font-black text-slate-900 mb-2">Daily Limit Reached</h2>
-                <p className="text-slate-600 font-medium">You've reached your daily limit of 50 contact views</p>
+                <h2 className="text-3xl font-black text-slate-900 dark:text-white mb-2">Daily Limit Reached</h2>
+                <p className="text-slate-600 dark:text-slate-400 font-medium">You've reached your daily limit of 50 contact views</p>
               </div>
 
               <div className="p-6 bg-slate-50 dark:bg-slate-800 rounded-2xl border-2 border-slate-200 dark:border-slate-700">

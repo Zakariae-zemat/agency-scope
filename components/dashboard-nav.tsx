@@ -81,7 +81,7 @@ export function DashboardNav({ isAdmin = false }: DashboardNavProps) {
               {/* Admin Panel Link - Only visible to admins */}
               {isAdmin && (
                 <Link
-                  href="/admin/metrics"
+                  href="/admin"
                   className="relative group"
                 >
                   <div
@@ -108,9 +108,9 @@ export function DashboardNav({ isAdmin = false }: DashboardNavProps) {
                   aria-label="Toggle theme"
                 >
                   {theme === 'dark' ? (
-                    <Sun className="w-5 h-5 text-slate-300" strokeWidth={2.5} />
+                    <Sun className="w-5 h-5 text-slate-300 dark:text-slate-300" strokeWidth={2.5} />
                   ) : (
-                    <Moon className="w-5 h-5 text-slate-700" strokeWidth={2.5} />
+                    <Moon className="w-5 h-5 text-slate-700 dark:text-slate-700" strokeWidth={2.5} />
                   )}
                 </button>
               )}
@@ -127,9 +127,9 @@ export function DashboardNav({ isAdmin = false }: DashboardNavProps) {
                 aria-label="Toggle menu"
               >
                 {mobileMenuOpen ? (
-                  <X className="w-5 h-5 text-slate-900" strokeWidth={2.5} />
+                  <X className="w-5 h-5 text-slate-900 dark:text-white" strokeWidth={2.5} />
                 ) : (
-                  <Menu className="w-5 h-5 text-slate-900" strokeWidth={2.5} />
+                  <Menu className="w-5 h-5 text-slate-900 dark:text-white" strokeWidth={2.5} />
                 )}
               </button>
             </div>
@@ -171,7 +171,7 @@ export function DashboardNav({ isAdmin = false }: DashboardNavProps) {
             {/* Admin Panel - Mobile */}
             {isAdmin && (
               <Link
-                href="/admin/metrics"
+                href="/admin"
                 onClick={() => setMobileMenuOpen(false)}
                 className={`flex items-center gap-3 px-5 py-4 rounded-2xl font-bold text-base transition-all duration-300 border-2 ${
                   pathname.startsWith('/admin')
