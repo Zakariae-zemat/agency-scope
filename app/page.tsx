@@ -6,6 +6,7 @@ export default function Home() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [scrollY, setScrollY] = useState(0);
   const [mounted, setMounted] = useState(false);
+  const [showVideoModal, setShowVideoModal] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -135,14 +136,17 @@ export default function Home() {
             {/* CTA Buttons */}
             <div className="flex flex-col gap-4 sm:flex-row sm:justify-center mb-16 animate-fade-in-delay-2">
               <button className="group relative px-10 py-4 text-lg font-bold text-white rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-600 transform hover:scale-105 transition-all duration-300 shadow-2xl shadow-blue-500/50 hover:shadow-cyan-500/50">
-                <span className="relative z-10">Start Free Today</span>
+                <Link href="/sign-up" className="relative z-10 cursor-pointer">Start Free Today</Link>
                 <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-400 to-cyan-400 opacity-0 group-hover:opacity-100 blur transition-opacity duration-300" />
                 <svg className="inline-block ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
               </button>
-              <button className="group px-10 py-4 text-lg font-bold text-white rounded-2xl border-2 border-white/20 hover:border-cyan-400/50 bg-white/5 backdrop-blur-sm transform hover:scale-105 transition-all duration-300">
-                View Demo
+              <button 
+                onClick={() => setShowVideoModal(true)}
+                className="group px-10 py-4 text-lg font-bold text-white rounded-2xl cursor-pointer border-2 border-white/20 hover:border-cyan-400/50 bg-white/5 backdrop-blur-sm transform hover:scale-105 transition-all duration-300"
+              >
+                Watch Demo
                 <svg className="inline-block ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -268,7 +272,7 @@ export default function Home() {
                   Join thousands of professionals accessing verified agency contacts
                 </p>
                 <button className="group relative px-12 py-5 text-xl font-bold text-white rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-600 transform hover:scale-105 transition-all duration-300 shadow-2xl shadow-blue-500/50 hover:shadow-cyan-500/50">
-                  <span className="relative z-10">Start Your Free Trial</span>
+                  <Link href="/sign-up" className="relative z-10 cursor-pointer">Start Your Free Trial</Link>
                   <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-400 to-cyan-400 opacity-0 group-hover:opacity-100 blur transition-opacity duration-300" />
                 </button>
               </div>
@@ -338,6 +342,41 @@ export default function Home() {
           animation: fade-in 0.8s ease-out 0.6s forwards;
         }
       `}</style>
+
+      {/* Video Modal */}
+      {showVideoModal && (
+        <div 
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm animate-fade-in"
+          onClick={() => setShowVideoModal(false)}
+        >
+          <div 
+            className="relative w-full max-w-6xl mx-4 animate-fade-in-delay"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button */}
+            <button
+              onClick={() => setShowVideoModal(false)}
+              className="absolute -top-12 right-0 text-white/80 hover:text-white transition-colors"
+            >
+              <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            
+            {/* Video Container */}
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl border-2 border-white/10">
+              <video
+                controls
+                autoPlay
+                className="w-full h-auto"
+                src="/agency_demo.mp4"
+              >
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
