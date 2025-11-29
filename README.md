@@ -1,8 +1,8 @@
 # AgencyScope
 
-> **A production-quality SaaS platform for accessing government agency and contact intelligence**
+> **A modern SaaS platform for browsing government agency and contact data**
 
-AgencyScope is a modern contact intelligence platform that provides authenticated access to verified government agencies and their key decision-makers. Built with Next.js 16, Prisma, and Clerk authentication, it features daily view limits, real-time tracking, and a clean, professional UI.
+AgencyScope is a contact data platform built with Next.js 16, Prisma, and Clerk authentication. It demonstrates key SaaS features including authentication, role-based access control, usage limits, and a professional admin panel. The platform uses sample government agency data imported from CSV files.
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-16.0-black.svg)](https://nextjs.org/)
@@ -13,16 +13,17 @@ AgencyScope is a modern contact intelligence platform that provides authenticate
 
 ## Table of Contents
 
-- [Features](#-features)
-- [Tech Stack](#-tech-stack)
-- [Architecture](#-architecture)
-- [Getting Started](#-getting-started)
-- [Environment Variables](#-environment-variables)
-- [Database Setup](#-database-setup)
-- [Development](#-development)
-- [Deployment](#-deployment)
-- [Project Structure](#-project-structure)
-- [Key Features Implementation](#-key-features-implementation)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [System Architecture](#system-architecture)
+- [Technical Decisions & Tradeoffs](#technical-decisions--tradeoffs)
+- [Getting Started](#getting-started)
+- [Environment Variables](#environment-variables)
+- [Database Setup](#database-setup)
+- [Development](#development)
+- [Deployment](#deployment)
+- [Project Structure](#project-structure)
+- [Key Features Implementation](#key-features-implementation)
 
 ---
 
@@ -30,23 +31,29 @@ AgencyScope is a modern contact intelligence platform that provides authenticate
 
 ### Core Functionality
 - **Secure Authentication** - Clerk-powered auth with middleware protection
-- **Agency Directory** - Browse 900+ verified government agencies
-- **Contact Database** - Access 1000+ key decision-makers
-- **Smart Dashboard** - Real-time stats and quick actions
-- **Advanced Search** - Filter by name, state, department, and more
-- **Pagination** - Smooth navigation through large datasets
+- **Agency Directory** - Browse sample government agency dataset (900+ records imported from CSV)
+- **Contact Database** - Access sample contact records (1000+ entries)
+- **Dashboard** - User stats and quick actions
+- **Search & Filters** - Filter by name, state, department
+- **Multiple Views** - Table view with pagination, card view with infinite scroll
 
-### Daily Limit System
-- **50 Views/Day** - Free tier with daily contact view limits
-- **Usage Tracking** - Real-time remaining views counter
-- **Smart Alerts** - Warning when approaching limit
-- **Upgrade Modal** - Seamless upgrade prompts when limit reached
+### Usage Tracking System
+- **Daily Limit** - 50 contact views per day for free tier users
+- **View Counter** - Track remaining views
+- **Alerts** - Warning when approaching limit
+- **Upgrade Modal** - Prompt when limit reached
+
+### Admin Panel (RBAC)
+- **User Management** - View all users with activity tracking and period filters
+- **Agency Management** - View agencies with table/card views (pagination and lazy loading)
+- **Metrics Dashboard** - System-wide analytics and user activity
+- **Role-Based Access** - Admin-only routes protected via Clerk metadata
 
 ### UX/UI
-- **Modern Design** - Clean, professional SaaS aesthetic
-- **Fully Responsive** - Works on all devices
-- **Fast Performance** - Optimized with Next.js 16 App Router
-- **Intuitive Navigation** - Clear user flows and CTAs
+- **Dark/Light Mode** - Complete theme support across all pages
+- **Responsive Design** - Mobile-first approach
+- **Modern Animations** - Framer Motion for smooth transitions
+- **Pagination & Lazy Loading** - Table view with pagination, card view with infinite scroll
 
 ---
 
@@ -61,27 +68,69 @@ AgencyScope is a modern contact intelligence platform that provides authenticate
 | **Authentication** | Clerk |
 | **UI Components** | Shadcn/UI + Radix UI |
 | **Styling** | Tailwind CSS 4 |
+| **Theme** | next-themes (dark/light mode) |
+| **Animations** | Framer Motion |
 | **Icons** | Lucide React |
 | **Deployment** | Vercel |
 
 ---
 
-## Architecture
+## Technical Decisions & Implementation
 
-AgencyScope follows a modern, scalable architecture:
+### Assessment Requirements
+This project was built to meet the following technical requirements:
+- **Framework**: Next.js 16 (App Router)
+- **Authentication**: Clerk
+- **Deployment**: Vercel
+- **Repository**: GitHub
+- **Documentation**: System design flowchart included
 
-```mermaid
-graph TB
-    A[Client Browser] --> B[Next.js App]
-    B --> C[Clerk Auth]
-    C --> D[Protected Routes]
-    D --> E[Prisma ORM]
-    E --> F[(Neon PostgreSQL)]
-    G[CSV Data] --> H[Seed Script]
-    H --> F
-```
+### Technology Stack Choices
 
-See [detailed architecture documentation](./docs/architecture.md) for more information.
+**Next.js 16 App Router**
+- Leverages React Server Components for improved performance
+- Streaming SSR and improved data fetching patterns
+- Native support for layouts and nested routing
+
+**Prisma + Neon PostgreSQL**
+- TypeScript type safety throughout the data layer
+- Schema migrations for database version control
+- Serverless Postgres with connection pooling
+
+**Clerk Authentication**
+- Built-in user management UI
+- RBAC support via publicMetadata
+- Middleware-based route protection
+
+**Tailwind CSS 4 + Shadcn/UI**
+- Utility-first styling approach
+- Pre-built accessible components via Radix UI
+- Dark/light mode with next-themes
+
+### Key Implementation Patterns
+
+**Daily View Limit System**
+- Server Actions for secure view tracking
+- Date-based query filtering for daily resets
+- Modal prompts when limit reached
+
+**Pagination & Lazy Loading**
+- Table view: Traditional pagination for better navigation control
+- Card view: Intersection Observer for infinite scroll on mobile
+- API route (`/api/agencies`) for incremental data loading
+
+**Role-Based Access Control**
+- Admin role stored in Clerk publicMetadata
+- Middleware checks for admin-only routes
+- Separate admin panel with user/agency management
+
+---
+
+## System Architecture
+
+![System Architecture](./docs/assets/diagram-export-11-29-2025-10_08_20-PM.png)
+
+AgencyScope follows a modern, scalable architecture with clear separation between client, server, authentication, and data layers. The system uses Next.js App Router for routing and rendering, Clerk for authentication and RBAC, Prisma ORM for type-safe database access, and Neon PostgreSQL for serverless data storage. Sample data is imported via CSV files during database seeding.
 
 ---
 
@@ -234,61 +283,75 @@ npm run db:studio    # Open Prisma Studio
 
 ```
 app/
-├── (auth)/
-│   ├── sign-in/     # Authentication pages
-│   └── sign-up/
-├── dashboard/       # Protected dashboard
-├── agencies/        # Agency listing
-├── contacts/        # Contact listing (with limits)
-└── upgrade/         # Upgrade page
+├── admin/           # Admin panel (RBAC protected)
+│   ├── agencies/    # Agency management
+│   ├── metrics/     # System analytics
+│   └── users/       # User management
+├── agencies/        # Public agency listing
+├── api/
+│   └── agencies/    # API for lazy loading
+├── contacts/        # Contact listing (with view limits)
+├── dashboard/       # User dashboard
+├── sign-in/         # Authentication pages
+├── sign-up/
+├── layout.tsx       # Root layout with providers
+└── page.tsx         # Landing page with video demo
 
 components/
-├── ui/              # Shadcn components
-├── dashboard-nav.tsx
+├── admin/           # Admin-specific components
+├── ui/              # Shadcn/UI components
+├── admin-agencies-table.tsx
+├── admin-nav.tsx
 ├── agencies-table.tsx
-└── contacts-table.tsx
+├── contacts-table.tsx
+├── dashboard-nav.tsx
+├── theme-provider.tsx
+└── theme-toggle.tsx
 
 lib/
-├── prisma.ts        # Prisma client
+├── actions.ts       # Server actions (view tracking)
 ├── auth.ts          # Auth utilities
-├── actions.ts       # Server actions
-└── utils.ts         # Helpers
+├── getUserRole.ts   # RBAC helper
+├── prisma.ts        # Prisma client singleton
+├── schemas.ts       # Zod validation schemas
+└── utils.ts         # Utility functions
 
 prisma/
 ├── schema.prisma    # Database schema
 ├── migrations/      # Migration history
-├── seed.ts          # Data seeding script
-└── data/            # CSV files
+├── seed.ts          # CSV import script
+└── data/            # Sample CSV files
+    ├── agencies_agency_rows.csv
+    └── contacts_contact_rows.csv
 ```
 
 ---
 
 ## Deployment
 
-### Deploy to Vercel (Recommended)
+This project is deployed on Vercel as per the assessment requirements.
 
-1. Push your code to GitHub
-2. Import project in [Vercel](https://vercel.com)
-3. Add environment variables
-4. Deploy
+### Deployment Configuration
 
-Vercel will automatically:
-- Build the Next.js app
-- Run Prisma migrations
-- Connect to Neon database
+**Environment Variables Required:**
+- `DATABASE_URL` - Neon PostgreSQL connection string
+- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` - Clerk public key
+- `CLERK_SECRET_KEY` - Clerk secret key
+- Clerk redirect URLs (sign-in, sign-up, after-auth)
 
-### Environment Variables on Vercel
+**Build Settings:**
+- Framework Preset: Next.js
+- Build Command: `npm run build`
+- Output Directory: `.next`
 
-Add all variables from `.env.local` to Vercel's environment settings.
-
-### Database Migration on Deploy
-
-Vercel automatically runs:
+**Database Migrations:**
+Prisma migrations are applied automatically during the build process via:
 ```bash
 npx prisma migrate deploy
 ```
 
-To seed production database:
+**Database Seeding:**
+Sample data can be imported using:
 ```bash
 npx prisma db seed
 ```
@@ -381,13 +444,16 @@ Server Components with URL-based state:
 Clean, modern landing page with clear value proposition and CTA buttons.
 
 ### Dashboard
-Real-time stats showing total agencies, contacts, and remaining daily views.
+User stats showing total agencies, contacts, and remaining daily views.
 
 ### Agencies Page
-Sortable table with search, state filters, and pagination.
+Table and card views with search, state filters, pagination, and infinite scroll for cards.
 
 ### Contacts Page
 Contact listing with view tracking, upgrade prompts, and contact details modal.
+
+### Admin Panel
+User management, agency CRUD operations, and system metrics with role-based access control.
 
 ### Upgrade Modal
 Appears when daily limit is reached, encouraging users to upgrade.
