@@ -50,14 +50,30 @@ export function ContactsTable({
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [viewMode, setViewMode] = useState<'table' | 'grid'>('table');
 
-  const handleSearch = () => {
+  const handleSearch = (immediate = false) => {
     const params = new URLSearchParams();
     if (search) params.set('search', search);
     params.set('page', '1');
 
-    startTransition(() => {
-      router.push(`/dashboard/contacts?${params.toString()}`);
-    });
+    if (isPro && immediate) {
+      // Pro users get instant search as they type
+      startTransition(() => {
+        router.push(`/dashboard/contacts?${params.toString()}`);
+      });
+    } else if (!immediate) {
+      // Free users and manual search (Enter key/button)
+      startTransition(() => {
+        router.push(`/dashboard/contacts?${params.toString()}`);
+      });
+    }
+  };
+
+  const handleSearchInput = (value: string) => {
+    setSearch(value);
+    if (isPro) {
+      // Pro users get real-time search
+      handleSearch(true);
+    }
   };
 
   const goToPage = (page: number) => {
@@ -122,13 +138,16 @@ export function ContactsTable({
             <div className="flex flex-1 gap-2">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
+                {isPro && (
+                  <Sparkles className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-purple-500" title="Pro: Real-time search" />
+                )}
                 <input
                   type="text"
-                  placeholder="Search contacts by name, title, or department..."
+                  placeholder={isPro ? "Search contacts (real-time)..." : "Search contacts by name, title, or department..."}
                   value={search}
-                  onChange={(e) => setSearch(e.target.value)}
+                  onChange={(e) => handleSearchInput(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                  className="w-full h-10 pl-10 pr-3 border border-slate-300 dark:border-slate-700 focus:border-slate-500 dark:focus:border-slate-500 focus:outline-none text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100"
+                  className="w-full h-10 pl-10 pr-10 border border-slate-300 dark:border-slate-700 focus:border-slate-500 dark:focus:border-slate-500 focus:outline-none text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100"
                 />
               </div>
               <button 
