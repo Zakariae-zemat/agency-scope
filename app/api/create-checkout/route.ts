@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 
 export async function POST(req: NextRequest) {
   try {
@@ -15,21 +15,27 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid plan" }, { status: 400 });
     }
 
-    // In production, you would:
-    // 1. Create a Stripe Checkout session via Clerk API
-    // 2. Return the checkout URL
-    // For now, redirect to Clerk's billing portal
-
-    const clerkBillingUrl = `${process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY?.includes('test') ? 'https://accounts.dev' : 'https://accounts'}.clerk.dev/user/billing`;
-
-    return NextResponse.json({
-      url: clerkBillingUrl,
-      message: "Please configure Clerk Billing in the Clerk Dashboard first",
+    // Use Clerk's API to create a subscription checkout session
+    const client = await clerkClient();
+    
+    // Create a subscription for the user
+    const subscription = await client.subscriptions.createSubscription({
+      userId,
+      planId: planKey,
     });
-  } catch (error) {
+
+    // Return the checkout URL
+    return NextResponse.json({
+      url: subscription.stripeCheckoutSessionUrl,
+      subscriptionId: subscription.id,
+    });
+  } catch (error: any) {
     console.error("Error creating checkout:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { 
+        error: error?.message || "Internal server error",
+        details: error?.errors?.[0]?.message
+      },
       { status: 500 }
     );
   }
