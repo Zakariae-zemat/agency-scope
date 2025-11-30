@@ -132,10 +132,11 @@ export function ContactsTable({
   return (
     <>
       <div className="space-y-6">
-        {/* Search Bar */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 p-4">
-          <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-            <div className="flex flex-1 gap-2">
+        {/* Search Bar - Fully Responsive */}
+        <div className="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 p-3 sm:p-4">
+          <div className="flex flex-col gap-3">
+            {/* Search Input Row */}
+            <div className="flex flex-col sm:flex-row gap-2">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
                 {isPro && (
@@ -145,7 +146,7 @@ export function ContactsTable({
                 )}
                 <input
                   type="text"
-                  placeholder={isPro ? "Search contacts (real-time)..." : "Search contacts by name, title, or department..."}
+                  placeholder={isPro ? "Search contacts..." : "Search contacts..."}
                   value={search}
                   onChange={(e) => handleSearchInput(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
@@ -155,36 +156,38 @@ export function ContactsTable({
               <button 
                 onClick={() => handleSearch()} 
                 disabled={isPending}
-                className="px-4 h-10 bg-slate-900 dark:bg-slate-700 text-white text-sm font-medium hover:bg-slate-800 dark:hover:bg-slate-600 disabled:opacity-50"
+                className="px-4 h-10 bg-slate-900 dark:bg-slate-700 text-white text-sm font-medium hover:bg-slate-800 dark:hover:bg-slate-600 disabled:opacity-50 whitespace-nowrap"
               >
-                Search
+                <span className="hidden sm:inline">Search</span>
+                <Search className="h-4 w-4 sm:hidden" />
               </button>
             </div>
             
-            <div className="flex gap-2">
+            {/* Controls Row */}
+            <div className="flex flex-col sm:flex-row gap-2 sm:justify-between">
               {/* View Toggle */}
-              <div className="flex items-center border border-slate-300 dark:border-slate-700">
+              <div className="flex items-center border border-slate-300 dark:border-slate-700 w-full sm:w-auto">
                 <button
                   onClick={() => setViewMode('table')}
-                  className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium ${
+                  className={`flex items-center justify-center gap-1.5 px-3 py-2 text-sm font-medium flex-1 sm:flex-initial ${
                     viewMode === 'table' 
                       ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100' 
                       : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
                   }`}
                 >
                   <List className="h-3.5 w-3.5" />
-                  Table
+                  <span className="hidden sm:inline">Table</span>
                 </button>
                 <button
                   onClick={() => setViewMode('grid')}
-                  className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium border-l border-slate-300 dark:border-slate-700 ${
+                  className={`flex items-center justify-center gap-1.5 px-3 py-2 text-sm font-medium border-l border-slate-300 dark:border-slate-700 flex-1 sm:flex-initial ${
                     viewMode === 'grid' 
                       ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100' 
                       : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
                   }`}
                 >
                   <LayoutGrid className="h-3.5 w-3.5" />
-                  Cards
+                  <span className="hidden sm:inline">Cards</span>
                 </button>
               </div>
 
@@ -192,10 +195,10 @@ export function ContactsTable({
                 onClick={handleExport} 
                 disabled={isPending}
                 title="Export only contacts you've viewed today"
-                className="flex items-center gap-1.5 px-3 h-10 border border-slate-300 dark:border-slate-700 hover:border-slate-500 dark:hover:border-slate-500 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 text-sm font-medium"
+                className="flex items-center justify-center gap-1.5 px-3 h-10 border border-slate-300 dark:border-slate-700 hover:border-slate-500 dark:hover:border-slate-500 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 text-sm font-medium w-full sm:w-auto"
               >
                 <Download className="h-3.5 w-3.5" />
-                Export
+                <span>Export</span>
               </button>
             </div>
           </div>

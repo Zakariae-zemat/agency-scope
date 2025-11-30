@@ -24,7 +24,6 @@ const adminNavigation = [
   { name: 'Metrics', href: '/admin/metrics', icon: Activity },
   { name: 'Users', href: '/admin/users', icon: Users },
   { name: 'Agencies', href: '/admin/agencies', icon: Building2 },
-  { name: 'Settings', href: '/admin/settings', icon: Settings },
 ];
 
 export function AdminNav() {

@@ -152,15 +152,16 @@ export function AgenciesTable({
 
   return (
     <div className="space-y-6">
-      {/* Search & Filters */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 p-4">
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-          <div className="flex flex-1 gap-2">
+      {/* Search & Filters - Fully Responsive */}
+      <div className="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 p-3 sm:p-4">
+        <div className="flex flex-col gap-3">
+          {/* Search Input Row */}
+          <div className="flex flex-col sm:flex-row gap-2">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
               <input
                 type="text"
-                placeholder="Search agencies or counties..."
+                placeholder="Search agencies..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
@@ -170,46 +171,114 @@ export function AgenciesTable({
             <button 
               onClick={handleSearch} 
               disabled={isPending}
-              className="px-4 h-10 bg-slate-900 dark:bg-slate-700 text-white text-sm font-medium hover:bg-slate-800 dark:hover:bg-slate-600 disabled:opacity-50"
+              className="px-4 h-10 bg-slate-900 dark:bg-slate-700 text-white text-sm font-medium hover:bg-slate-800 dark:hover:bg-slate-600 disabled:opacity-50 whitespace-nowrap"
             >
-              Search
+              <span className="hidden sm:inline">Search</span>
+              <Search className="h-4 w-4 sm:hidden" />
             </button>
           </div>
 
-          <div className="flex gap-2">
-            {/* View Toggle */}
-            <div className="flex items-center border border-slate-300 dark:border-slate-700">
-              <button
-                onClick={() => setViewMode('table')}
-                className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium ${
-                  viewMode === 'table' 
-                    ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100' 
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
-                }`}
-              >
-                <List className="h-3.5 w-3.5" />
-                Table
-              </button>
-              <button
-                onClick={() => setViewMode('grid')}
-                className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium border-l border-slate-300 dark:border-slate-700 ${
-                  viewMode === 'grid' 
-                    ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100' 
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
-                }`}
-              >
-                <LayoutGrid className="h-3.5 w-3.5" />
-                Cards
-              </button>
-            </div>
-
+          {/* Filters & Controls Row */}
+          <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
+            {/* State Filter */}
             <select
               value={selectedState}
               onChange={(e) => handleStateChange(e.target.value)}
-              className="h-10 px-3 border border-slate-300 dark:border-slate-700 focus:border-slate-500 dark:focus:border-slate-500 focus:outline-none text-sm font-medium bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100"
+              className="h-10 px-3 border border-slate-300 dark:border-slate-700 focus:border-slate-500 dark:focus:border-slate-500 focus:outline-none text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 flex-1 sm:flex-initial sm:min-w-[150px]"
             >
               <option value="">All States</option>
               {states.map((state) => (
+                <option key={state} value={state}>
+                  {state}
+                </option>
+              ))}
+            </select>
+
+            <div className="flex gap-2 w-full sm:w-auto sm:ml-auto">
+              {/* View Toggle */}
+              <div className="flex items-center border border-slate-300 dark:border-slate-700 flex-1 sm:flex-initial">
+                <button
+                  onClick={() => setViewMode('table')}
+                  className={`flex items-center justify-center gap-1.5 px-3 py-2 text-sm font-medium flex-1 sm:flex-initial ${
+                    viewMode === 'table' 
+                      ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100' 
+                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
+                  }`}
+                >
+                  <List className="h-3.5 w-3.5" />
+                  <span className="hidden sm:inline">Table</span>
+                </button>
+                <button
+                  onClick={() => setViewMode('grid')}
+                  className={`flex items-center justify-center gap-1.5 px-3 py-2 text-sm font-medium border-l border-slate-300 dark:border-slate-700 flex-1 sm:flex-initial ${
+                    viewMode === 'grid' 
+                      ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100' 
+                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
+                  }`}
+                >
+                  <LayoutGrid className="h-3.5 w-3.5" />
+                  <span className="hidden sm:inline">Cards</span>
+                </button>
+              </div>
+
+              <button 
+                onClick={handleExport} 
+                disabled={isPending}
+                className="flex items-center justify-center gap-1.5 px-3 h-10 border border-slate-300 dark:border-slate-700 hover:border-slate-500 dark:hover:border-slate-500 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 text-sm font-medium flex-1 sm:flex-initial whitespace-nowrap"
+              >
+                <Download className="h-3.5 w-3.5" />
+                <span className="hidden sm:inline">Export</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Results Count */}
+      <div className="flex items-center justify-between px-1">
+        <p className="text-sm text-slate-600 dark:text-slate-400">
+          Showing <span className="font-bold text-slate-900 dark:text-slate-100">{viewMode === 'grid' ? displayedAgencies.length : agencies.length}</span> of <span className="font-bold text-slate-900 dark:text-slate-100">{total.toLocaleString()}</span> agencies
+        </p>
+      </div>
+
+      {/* Table View */}
+      {viewMode === 'table' && (
+        <div className="bg-white dark:bg-slate-900 rounded-3xl border-2 border-slate-100 dark:border-slate-800 overflow-hidden hover:shadow-xl transition-shadow duration-300">
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[640px]">
+              <thead>
+                <tr className="border-b-2 border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800">
+                  <th className="py-4 px-4 text-left">
+                    <span className="text-xs font-black text-slate-600 dark:text-slate-400 uppercase tracking-wider">Agency</span>
+                  </th>
+                  <th className="py-4 px-4 text-left hidden sm:table-cell">
+                    <span className="text-xs font-black text-slate-600 dark:text-slate-400 uppercase tracking-wider">State</span>
+                  </th>
+                  <th className="py-4 px-4 text-left hidden md:table-cell">
+                    <span className="text-xs font-black text-slate-600 dark:text-slate-400 uppercase tracking-wider">Type</span>
+                  </th>
+                  <th className="py-4 px-4 text-left hidden lg:table-cell">
+                    <span className="text-xs font-black text-slate-600 dark:text-slate-400 uppercase tracking-wider">Contacts</span>
+                  </th>
+                  <th className="py-4 px-4 text-left">
+                    <span className="text-xs font-black text-slate-600 dark:text-slate-400 uppercase tracking-wider">Actions</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {agencies.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="px-6 py-16 text-center">
+                      <div className="flex flex-col items-center gap-3">
+                        <div className="p-4 bg-slate-100 dark:bg-slate-800 rounded-full">
+                          <Building2 className="h-8 w-8 text-slate-400 dark:text-slate-500" strokeWidth={2} />
+                        </div>
+                        <p className="text-lg font-bold text-slate-500 dark:text-slate-400">No agencies found</p>
+                      </div>
+                    </td>
+                  </tr>
+                ) : (
+                  agencies.map((agency) => (
                 <option key={state} value={state}>
                   {state}
                 </option>
