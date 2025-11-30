@@ -83,7 +83,7 @@ AgencyScope is a production-ready, full-stack SaaS application built with Next.j
 | **Theme** | next-themes (dark/light mode) |
 | **Animations** | Framer Motion |
 | **Icons** | Lucide React |
-| **Deployment** | Vercel (Edge Runtime) |
+| **Deployment** | Vercel|
 
 ---
 
