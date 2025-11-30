@@ -562,7 +562,7 @@ export function ContactsTable({
                 >
                   Maybe Later
                 </button>
-                <Link href="/dashboard/upgrade" className="flex-1">
+                <Link href="/pricing" className="flex-1">
                   <button className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-slate-900 text-white font-bold hover:bg-slate-800 transition-all duration-300 hover:scale-105">
                     <TrendingUp className="h-4 w-4" strokeWidth={2.5} />
                     Upgrade Now

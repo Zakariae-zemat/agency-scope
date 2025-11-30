@@ -1,20 +1,23 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Building2, Users, Eye, TrendingUp, Zap, Award, ArrowRight, Sparkles } from 'lucide-react';
+import { Building2, Users, Eye, TrendingUp, Zap, Award, ArrowRight, Sparkles, Crown } from 'lucide-react';
 import Link from 'next/link';
+import type { UserSubscription } from '@/lib/subscription';
 
 interface DashboardClientProps {
   totalAgencies: number;
   totalContacts: number;
   todayViews: number;
+  subscription: UserSubscription | null;
 }
 
-export default function DashboardClient({ totalAgencies, totalContacts, todayViews }: DashboardClientProps) {
+export default function DashboardClient({ totalAgencies, totalContacts, todayViews, subscription }: DashboardClientProps) {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [mounted, setMounted] = useState(false);
   
-  const remainingViews = Math.max(0, 50 - todayViews);
+  const isPro = subscription?.isPro || false;
+  const remainingViews = isPro ? Infinity : Math.max(0, 50 - todayViews);
 
   useEffect(() => {
     setMounted(true);
@@ -106,8 +109,8 @@ export default function DashboardClient({ totalAgencies, totalContacts, todayVie
             {
               icon: Eye,
               title: 'Views Remaining',
-              value: `${remainingViews}/50`,
-              subtitle: 'Resets daily at midnight',
+              value: isPro ? 'Unlimited' : `${remainingViews}/50`,
+              subtitle: isPro ? 'Pro subscription active' : 'Resets daily at midnight',
               color: 'cyan',
               delay: 200
             }
@@ -162,47 +165,69 @@ export default function DashboardClient({ totalAgencies, totalContacts, todayVie
         <div className="grid gap-6 lg:grid-cols-2">
 
           {/* Account Status Card */}
-          <div
-          >
-
-            <div className="space-y-6">
-              {/* Status Message */}
-              {remainingViews === 0 ? (
-                <div className="relative overflow-hidden p-6 rounded-2xl bg-orange-50 dark:bg-orange-950 border-2 border-orange-200 dark:border-orange-900">
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-orange-200 dark:bg-orange-900 rounded-full blur-2xl opacity-30" />
-                  <div className="relative space-y-3">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse" />
-                      <p className="text-sm font-black text-orange-900 dark:text-orange-100 uppercase tracking-wide">
-                        Daily limit reached
-                      </p>
-                    </div>
-                    <p className="text-sm text-orange-700 dark:text-orange-300 font-medium leading-relaxed">
-                      You've used all 50 contact views today. Upgrade for unlimited access.
+          <div className="space-y-6">
+            {/* Subscription Status */}
+            {isPro ? (
+              <div className="relative overflow-hidden p-6 rounded-2xl bg-gradient-to-br from-purple-50 to-blue-50 dark:from-purple-950 dark:to-blue-950 border-2 border-purple-200 dark:border-purple-800">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-purple-300 dark:bg-purple-800 rounded-full blur-3xl opacity-30" />
+                <div className="relative space-y-3">
+                  <div className="flex items-center gap-2">
+                    <Crown className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                    <p className="text-sm font-black text-purple-900 dark:text-purple-100 uppercase tracking-wide">
+                      Pro Subscription Active
                     </p>
-                    <Link href="/dashboard/upgrade">
-                      <button className="group flex items-center gap-2 text-sm font-bold text-orange-900 dark:text-orange-100 hover:gap-3 transition-all duration-300">
-                        View upgrade options
-                        <ArrowRight className="w-4 h-4" strokeWidth={3} />
-                      </button>
-                    </Link>
                   </div>
+                  <p className="text-sm text-purple-700 dark:text-purple-300 font-medium leading-relaxed">
+                    You have unlimited contact views and premium features.
+                  </p>
+                  <Link href="/manage-subscription">
+                    <button className="group flex items-center gap-2 text-sm font-bold text-purple-900 dark:text-purple-100 hover:gap-3 transition-all duration-300">
+                      Manage subscription
+                      <ArrowRight className="w-4 h-4" strokeWidth={3} />
+                    </button>
+                  </Link>
                 </div>
-              ) : (
-                <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700">
-                  <div className="flex items-start gap-3">
-                    <div className="p-2 bg-slate-700 dark:bg-slate-600 rounded-lg">
-                      <Sparkles className="w-4 h-4 text-white" />
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
-                        You have <span className="font-black text-slate-900 dark:text-slate-100">{remainingViews}</span> contact views remaining today.
+              </div>
+            ) : (
+              <>
+                {/* Status Message */}
+                {remainingViews === 0 ? (
+                  <div className="relative overflow-hidden p-6 rounded-2xl bg-orange-50 dark:bg-orange-950 border-2 border-orange-200 dark:border-orange-900">
+                    <div className="absolute top-0 right-0 w-24 h-24 bg-orange-200 dark:bg-orange-900 rounded-full blur-2xl opacity-30" />
+                    <div className="relative space-y-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse" />
+                        <p className="text-sm font-black text-orange-900 dark:text-orange-100 uppercase tracking-wide">
+                          Daily limit reached
+                        </p>
+                      </div>
+                      <p className="text-sm text-orange-700 dark:text-orange-300 font-medium leading-relaxed">
+                        You've used all 50 contact views today. Upgrade for unlimited access.
                       </p>
+                      <Link href="/pricing">
+                        <button className="group flex items-center gap-2 text-sm font-bold text-orange-900 dark:text-orange-100 hover:gap-3 transition-all duration-300">
+                          View upgrade options
+                          <ArrowRight className="w-4 h-4" strokeWidth={3} />
+                        </button>
+                      </Link>
                     </div>
                   </div>
-                </div>
-              )}
-            </div>
+                ) : (
+                  <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700">
+                    <div className="flex items-start gap-3">
+                      <div className="p-2 bg-slate-700 dark:bg-slate-600 rounded-lg">
+                        <Sparkles className="w-4 h-4 text-white" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                          You have <span className="font-black text-slate-900 dark:text-slate-100">{remainingViews}</span> contact views remaining today.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
           </div>
         </div>
       </div>

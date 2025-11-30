@@ -1,6 +1,7 @@
 import DashboardClient from '@/components/dashboard-client';
 import { getCurrentUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { getUserSubscription } from '@/lib/subscription';
 
 
 export default async function DashboardPage() {
@@ -11,7 +12,7 @@ export default async function DashboardPage() {
   }
 
   // Get stats
-  const [totalAgencies, totalContacts, todayViews] = await Promise.all([
+  const [totalAgencies, totalContacts, todayViews, subscription] = await Promise.all([
     prisma.agency.count(),
     prisma.contact.count(),
     prisma.contactView.count({
@@ -22,6 +23,7 @@ export default async function DashboardPage() {
         },
       },
     }),
+    getUserSubscription(user.clerkId),
   ]);
 
   return (
@@ -29,6 +31,7 @@ export default async function DashboardPage() {
       totalAgencies={totalAgencies}
       totalContacts={totalContacts}
       todayViews={todayViews}
+      subscription={subscription}
     />
   );
 }
