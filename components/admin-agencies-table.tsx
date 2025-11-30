@@ -317,13 +317,6 @@ export function AdminAgenciesTable({
             </table>
           </div>
         </div>
-      )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
-        </div>
       ) : (
         /* Grid View with Lazy Loading */
         <div>
