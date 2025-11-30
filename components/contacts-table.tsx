@@ -139,7 +139,9 @@ export function ContactsTable({
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
                 {isPro && (
-                  <Sparkles className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-purple-500" title="Pro: Real-time search" />
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2" title="Pro: Real-time search">
+                    <Sparkles className="h-4 w-4 text-purple-500" />
+                  </div>
                 )}
                 <input
                   type="text"
