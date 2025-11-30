@@ -141,7 +141,7 @@ export function AdminAgenciesTable({
     <div className="space-y-6">
       {/* Search & Filters */}
       <div className="bg-white dark:bg-slate-900 rounded-3xl border-2 border-slate-100 dark:border-slate-800 p-6">
-        <div className="flex flex-row flex-wrap items-center gap-3">
+        <div className="flex items-center gap-3 overflow-x-auto">
           <div className="relative flex-1 min-w-[200px]">
             <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
             <input
@@ -156,14 +156,14 @@ export function AdminAgenciesTable({
           <button 
             onClick={handleSearch} 
             disabled={isPending}
-            className="px-6 h-12 bg-slate-900 dark:bg-slate-700 text-white text-sm font-bold rounded-xl hover:bg-slate-800 dark:hover:bg-slate-600 disabled:opacity-50 transition-all whitespace-nowrap"
+            className="px-6 h-12 bg-slate-900 dark:bg-slate-700 text-white text-sm font-bold rounded-xl hover:bg-slate-800 dark:hover:bg-slate-600 disabled:opacity-50 transition-all whitespace-nowrap flex-shrink-0"
           >
             Search
           </button>
           <select
             value={selectedState}
             onChange={(e) => handleStateChange(e.target.value)}
-            className="h-12 px-4 border-2 border-slate-100 dark:border-slate-800 rounded-xl focus:border-slate-300 dark:focus:border-slate-700 focus:outline-none text-sm font-medium bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 whitespace-nowrap"
+            className="h-12 px-4 border-2 border-slate-100 dark:border-slate-800 rounded-xl focus:border-slate-300 dark:focus:border-slate-700 focus:outline-none text-sm font-medium bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 whitespace-nowrap flex-shrink-0"
           >
             <option value="">All States</option>
             {states.map((state) => (
@@ -172,7 +172,7 @@ export function AdminAgenciesTable({
               </option>
             ))}
           </select>
-          <div className="hidden md:flex items-center border-2 border-slate-100 dark:border-slate-800 rounded-xl overflow-hidden whitespace-nowrap">
+          <div className="hidden md:flex items-center border-2 border-slate-100 dark:border-slate-800 rounded-xl overflow-hidden whitespace-nowrap flex-shrink-0">
             <button
               onClick={() => setViewMode('table')}
               className={`flex items-center gap-2 px-4 py-2.5 text-sm font-bold transition-all ${
@@ -202,7 +202,7 @@ export function AdminAgenciesTable({
       {/* Results Count */}
       <div className="flex items-center justify-between px-1">
         <p className="text-sm text-slate-600 dark:text-slate-400">
-          Showing <span className="font-bold text-slate-900 dark:text-slate-100">{viewMode === 'grid' ? displayedAgencies.length : agencies.length}</span> of <span className="font-bold text-slate-900 dark:text-slate-100">{total.toLocaleString()}</span> agencies
+          Showing <span className="font-bold text-slate-900 dark:text-slate-100">{displayedAgencies.length}</span> of <span className="font-bold text-slate-900 dark:text-slate-100">{total.toLocaleString()}</span> agencies
         </p>
       </div>
 

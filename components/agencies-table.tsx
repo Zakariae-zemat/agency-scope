@@ -154,90 +154,157 @@ export function AgenciesTable({
     <div className="space-y-6">
       {/* Search & Filters */}
       <div className="bg-white dark:bg-slate-900 rounded-3xl border-2 border-slate-100 dark:border-slate-800 p-6">
-        <div className="flex flex-col gap-4">
-          <div className="flex flex-col md:flex-row gap-3">
-            <div className="relative flex-1">
-              <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
-              <input
-                type="text"
-                placeholder="Search agencies..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                className="w-full h-12 pl-11 pr-4 border-2 border-slate-100 dark:border-slate-800 rounded-xl focus:border-slate-300 dark:focus:border-slate-700 focus:outline-none text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100"
-              />
-            </div>
-            <button 
-              onClick={handleSearch} 
-              disabled={isPending}
-              className="px-6 h-12 bg-slate-900 dark:bg-slate-700 text-white text-sm font-bold rounded-xl hover:bg-slate-800 dark:hover:bg-slate-600 disabled:opacity-50 transition-all"
+        <div className="flex flex-row flex-wrap items-center gap-3">
+          <div className="relative flex-1 min-w-[200px]">
+            <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
+            <input
+              type="text"
+              placeholder="Search agencies..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+              className="w-full h-12 pl-11 pr-4 border-2 border-slate-100 dark:border-slate-800 rounded-xl focus:border-slate-300 dark:focus:border-slate-700 focus:outline-none text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100"
+            />
+          </div>
+          <button 
+            onClick={handleSearch} 
+            disabled={isPending}
+            className="px-6 h-12 bg-slate-900 dark:bg-slate-700 text-white text-sm font-bold rounded-xl hover:bg-slate-800 dark:hover:bg-slate-600 disabled:opacity-50 transition-all whitespace-nowrap"
+          >
+            Search
+          </button>
+          <select
+            value={selectedState}
+            onChange={(e) => handleStateChange(e.target.value)}
+            className="h-12 px-4 border-2 border-slate-100 dark:border-slate-800 rounded-xl focus:border-slate-300 dark:focus:border-slate-700 focus:outline-none text-sm font-medium bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 whitespace-nowrap"
+          >
+            <option value="">All States</option>
+            {states.map((state) => (
+              <option key={state} value={state}>
+                {state}
+              </option>
+            ))}
+          </select>
+          <div className="flex items-center border-2 border-slate-100 dark:border-slate-800 rounded-xl overflow-hidden whitespace-nowrap">
+            <button
+              onClick={() => setViewMode('table')}
+              className={`flex items-center gap-2 px-4 py-2.5 text-sm font-bold transition-all ${
+                viewMode === 'table' 
+                  ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100' 
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
+              }`}
             >
-              Search
+              <List className="h-4 w-4" />
+              Table
+            </button>
+            <button
+              onClick={() => setViewMode('grid')}
+              className={`flex items-center gap-2 px-4 py-2.5 text-sm font-bold border-l-2 border-slate-100 dark:border-slate-800 transition-all ${
+                viewMode === 'grid' 
+                  ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100' 
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
+              }`}
+            >
+              <LayoutGrid className="h-4 w-4" />
+              Cards
             </button>
           </div>
-
-          <div className="flex flex-col md:flex-row gap-3 md:items-center md:justify-between">
-            <select
-              value={selectedState}
-              onChange={(e) => handleStateChange(e.target.value)}
-              className="h-12 px-4 border-2 border-slate-100 dark:border-slate-800 rounded-xl focus:border-slate-300 dark:focus:border-slate-700 focus:outline-none text-sm font-medium bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100"
-            >
-              <option value="">All States</option>
-              {states.map((state) => (
-                <option key={state} value={state}>
-                  {state}
-                </option>
-              ))}
-            </select>
-
-            <div className="flex gap-3">
-              <div className="flex items-center border-2 border-slate-100 dark:border-slate-800 rounded-xl overflow-hidden">
-                <button
-                  onClick={() => setViewMode('table')}
-                  className={`flex items-center gap-2 px-4 py-2.5 text-sm font-bold transition-all ${
-                    viewMode === 'table' 
-                      ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100' 
-                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
-                  }`}
-                >
-                  <List className="h-4 w-4" />
-                  Table
-                </button>
-                <button
-                  onClick={() => setViewMode('grid')}
-                  className={`flex items-center gap-2 px-4 py-2.5 text-sm font-bold border-l-2 border-slate-100 dark:border-slate-800 transition-all ${
-                    viewMode === 'grid' 
-                      ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100' 
-                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
-                  }`}
-                >
-                  <LayoutGrid className="h-4 w-4" />
-                  Cards
-                </button>
-              </div>
-
-              <button 
-                onClick={handleExport} 
-                disabled={isPending}
-                className="px-6 h-12 bg-slate-900 dark:bg-slate-700 text-white text-sm font-bold rounded-xl hover:bg-slate-800 dark:hover:bg-slate-600 disabled:opacity-50 transition-all flex items-center gap-2"
-              >
-                <Download className="h-4 w-4" />
-                Export
-              </button>
-            </div>
-          </div>
+          <button 
+            onClick={handleExport} 
+            disabled={isPending}
+            className="px-6 h-12 bg-slate-900 dark:bg-slate-700 text-white text-sm font-bold rounded-xl hover:bg-slate-800 dark:hover:bg-slate-600 disabled:opacity-50 transition-all flex items-center gap-2 whitespace-nowrap"
+          >
+            <Download className="h-4 w-4" />
+            Export
+          </button>
         </div>
       </div>
 
-      {/* Results Count */}
-      <div className="flex items-center justify-between px-1">
-        <p className="text-sm text-slate-600 dark:text-slate-400">
-          Showing <span className="font-bold text-slate-900 dark:text-slate-100">{viewMode === 'grid' ? displayedAgencies.length : agencies.length}</span> of <span className="font-bold text-slate-900 dark:text-slate-100">{total.toLocaleString()}</span> agencies
-        </p>
+      {/* Mobile: Always Cards with Lazy Loading */}
+      <div className="md:hidden">
+        {displayedAgencies.length === 0 ? (
+          <div className="bg-white dark:bg-slate-900 rounded-3xl border-2 border-slate-100 dark:border-slate-800 p-16 text-center">
+            <div className="flex flex-col items-center gap-3">
+              <div className="p-4 bg-slate-100 dark:bg-slate-800 rounded-full">
+                <Building2 className="h-8 w-8 text-slate-400 dark:text-slate-500" strokeWidth={2} />
+              </div>
+              <p className="text-lg font-bold text-slate-500 dark:text-slate-400">No agencies found</p>
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {displayedAgencies.map((agency) => (
+              <div key={agency.id} className="bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-xl p-4 space-y-3">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex-1">
+                    <div className="font-bold text-slate-900 dark:text-slate-100 text-base">{agency.name}</div>
+                    {agency.county && (
+                      <div className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1">
+                        {agency.county}
+                      </div>
+                    )}
+                  </div>
+                  {agency.website && (
+                    <a
+                      href={agency.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2 rounded-lg bg-cyan-600 dark:bg-cyan-500 text-white hover:bg-cyan-700 dark:hover:bg-cyan-600 transition-all"
+                    >
+                      <ExternalLink className="h-4 w-4" strokeWidth={2.5} />
+                    </a>
+                  )}
+                </div>
+                <div className="grid grid-cols-2 gap-3 text-sm">
+                  <div>
+                    <div className="text-xs text-slate-500 dark:text-slate-400 font-medium mb-1">State</div>
+                    {agency.state ? (
+                      <div className="flex items-center gap-1">
+                        <span className="font-bold text-slate-900 dark:text-slate-100">{agency.state}</span>
+                        {agency.stateCode && (
+                          <span className="text-xs text-slate-500 dark:text-slate-400">({agency.stateCode})</span>
+                        )}
+                      </div>
+                    ) : (
+                      <span className="text-slate-400 dark:text-slate-500">-</span>
+                    )}
+                  </div>
+                  <div>
+                    <div className="text-xs text-slate-500 dark:text-slate-400 font-medium mb-1">Type</div>
+                    {agency.type ? (
+                      <span className="inline-flex px-2 py-1 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold">
+                        {agency.type}
+                      </span>
+                    ) : (
+                      <span className="text-slate-400 dark:text-slate-500">-</span>
+                    )}
+                  </div>
+                  <div>
+                    <div className="text-xs text-slate-500 dark:text-slate-400 font-medium mb-1">Contacts</div>
+                    <div className="flex items-center gap-2">
+                      <Users className="h-4 w-4 text-slate-400 dark:text-slate-500" strokeWidth={2} />
+                      <span className="font-bold text-slate-900 dark:text-slate-100">{agency._count.contacts}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+            
+            {hasMore && (
+              <div ref={observerTarget} className="flex justify-center py-8">
+                <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                  <span className="text-sm font-medium">Loading more...</span>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
-      {/* Table View */}
-      {viewMode === 'table' ? (
+      {/* Desktop: Table or Grid View */}
+      <div className="hidden md:block">
+        {viewMode === 'table' ? (
         <div className="bg-white dark:bg-slate-900 rounded-3xl border-2 border-slate-100 dark:border-slate-800 overflow-hidden hover:shadow-xl transition-shadow duration-300">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[640px]">
@@ -435,9 +502,10 @@ export function AgenciesTable({
           </>
           )}
         </div>
-      )}
+        )}
+      </div>
 
-      {/* Pagination - Only show for table view */}
+      {/* Pagination - Only show for desktop table view */}
       {viewMode === 'table' && totalPages > 1 && (
         <div className="bg-white dark:bg-slate-900 rounded-3xl border-2 border-slate-100 dark:border-slate-800 p-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">

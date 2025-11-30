@@ -134,69 +134,63 @@ export function ContactsTable({
       <div className="space-y-6">
         {/* Search Bar */}
         <div className="bg-white dark:bg-slate-900 rounded-3xl border-2 border-slate-100 dark:border-slate-800 p-6">
-          <div className="flex flex-col gap-4">
-            <div className="flex flex-col md:flex-row gap-3">
-              <div className="relative flex-1">
-                <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
-                {isPro && (
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2" title="Pro: Real-time search">
-                    <Sparkles className="h-4 w-4 text-purple-500" />
-                  </div>
-                )}
-                <input
-                  type="text"
-                  placeholder="Search contacts..."
-                  value={search}
-                  onChange={(e) => handleSearchInput(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                  className="w-full h-12 pl-11 pr-11 border-2 border-slate-100 dark:border-slate-800 rounded-xl focus:border-slate-300 dark:focus:border-slate-700 focus:outline-none text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100"
-                />
-              </div>
-              <button 
-                onClick={() => handleSearch()} 
-                disabled={isPending}
-                className="px-6 h-12 bg-slate-900 dark:bg-slate-700 text-white text-sm font-bold rounded-xl hover:bg-slate-800 dark:hover:bg-slate-600 disabled:opacity-50 transition-all"
+          <div className="flex flex-row flex-wrap items-center gap-3">
+            <div className="relative flex-1 min-w-[200px]">
+              <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
+              {isPro && (
+                <div className="absolute right-4 top-1/2 -translate-y-1/2" title="Pro: Real-time search">
+                  <Sparkles className="h-4 w-4 text-purple-500" />
+                </div>
+              )}
+              <input
+                type="text"
+                placeholder="Search contacts..."
+                value={search}
+                onChange={(e) => handleSearchInput(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                className="w-full h-12 pl-11 pr-11 border-2 border-slate-100 dark:border-slate-800 rounded-xl focus:border-slate-300 dark:focus:border-slate-700 focus:outline-none text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100"
+              />
+            </div>
+            <button 
+              onClick={() => handleSearch()} 
+              disabled={isPending}
+              className="px-6 h-12 bg-slate-900 dark:bg-slate-700 text-white text-sm font-bold rounded-xl hover:bg-slate-800 dark:hover:bg-slate-600 disabled:opacity-50 transition-all whitespace-nowrap"
+            >
+              Search
+            </button>
+            <div className="flex items-center border-2 border-slate-100 dark:border-slate-800 rounded-xl overflow-hidden whitespace-nowrap">
+              <button
+                onClick={() => setViewMode('table')}
+                className={`flex items-center gap-2 px-4 py-2.5 text-sm font-bold transition-all ${
+                  viewMode === 'table' 
+                    ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100' 
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
+                }`}
               >
-                Search
+                <List className="h-4 w-4" />
+                Table
+              </button>
+              <button
+                onClick={() => setViewMode('grid')}
+                className={`flex items-center gap-2 px-4 py-2.5 text-sm font-bold border-l-2 border-slate-100 dark:border-slate-800 transition-all ${
+                  viewMode === 'grid' 
+                    ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100' 
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
+                }`}
+              >
+                <LayoutGrid className="h-4 w-4" />
+                Cards
               </button>
             </div>
-            
-            <div className="flex flex-col md:flex-row gap-3 md:justify-between">
-              <div className="flex items-center border-2 border-slate-100 dark:border-slate-800 rounded-xl overflow-hidden">
-                <button
-                  onClick={() => setViewMode('table')}
-                  className={`flex items-center gap-2 px-4 py-2.5 text-sm font-bold transition-all ${
-                    viewMode === 'table' 
-                      ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100' 
-                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
-                  }`}
-                >
-                  <List className="h-4 w-4" />
-                  Table
-                </button>
-                <button
-                  onClick={() => setViewMode('grid')}
-                  className={`flex items-center gap-2 px-4 py-2.5 text-sm font-bold border-l-2 border-slate-100 dark:border-slate-800 transition-all ${
-                    viewMode === 'grid' 
-                      ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100' 
-                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
-                  }`}
-                >
-                  <LayoutGrid className="h-4 w-4" />
-                  Cards
-                </button>
-              </div>
-
-              <button 
-                onClick={handleExport} 
-                disabled={isPending}
-                title="Export only contacts you've viewed today"
-                className="flex items-center gap-2 px-6 h-12 border-2 border-slate-100 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 rounded-xl text-sm font-bold transition-all"
-              >
-                <Download className="h-4 w-4" />
-                <span>Export</span>
-              </button>
-            </div>
+            <button 
+              onClick={handleExport} 
+              disabled={isPending}
+              title="Export only contacts you've viewed today"
+              className="flex items-center gap-2 px-6 h-12 border-2 border-slate-100 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 rounded-xl text-sm font-bold transition-all whitespace-nowrap"
+            >
+              <Download className="h-4 w-4" />
+              <span>Export</span>
+            </button>
           </div>
         </div>
 
@@ -228,7 +222,7 @@ export function ContactsTable({
           </div>
         )}
 
-        {/* Table View - Desktop table, Mobile cards */}
+        {/* Table View */}
         {viewMode === 'table' ? (
           <div className="bg-white dark:bg-slate-900 rounded-3xl border-2 border-slate-100 dark:border-slate-800 overflow-hidden hover:shadow-xl transition-shadow duration-300">
             {/* Mobile: Cards */}
