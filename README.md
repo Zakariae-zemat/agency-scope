@@ -11,7 +11,6 @@ AgencyScope is a production-ready, full-stack SaaS application built with Next.j
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Neon-4169E1.svg)](https://neon.tech/)
 
 **Live Demo:** [https://agency-scope.vercel.app](https://agency-scope.vercel.app)  
-**Repository:** [github.com/Zakariae-zemat/agency-scope](https://github.com/Zakariae-zemat/agency-scope)
 
 ---
 
