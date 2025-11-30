@@ -12,27 +12,16 @@ export default function UpgradePage() {
   const [loading, setLoading] = useState(false);
 
   const handleUpgrade = async () => {
+    if (!user) {
+      alert("Please sign in to upgrade");
+      return;
+    }
+
     setLoading(true);
     try {
-      const response = await fetch("/api/create-checkout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          planKey: "pro_subscription_plan",
-          userId: user?.id,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        alert(data.message || "Please configure Clerk Billing first");
-        setLoading(false);
-      }
+      // Redirect to Clerk's user profile billing page
+      // This is where users can subscribe to plans
+      window.location.href = "/user-profile#billing";
     } catch (error) {
       console.error("Error:", error);
       alert("Something went wrong. Please try again.");
