@@ -23,21 +23,22 @@ export async function POST() {
     }
 
     const subscriptionItem = clerkSubscription.subscriptionItems[0];
-    const planId = subscriptionItem.planId || "free_user";
+    // Use plan SLUG, not plan ID!
+    const planSlug = subscriptionItem.plan?.slug || "free_user";
 
     // Sync to database
     const subscription = await prisma.subscription.upsert({
       where: { userId },
       update: {
         clerkSubscriptionId: clerkSubscription.id,
-        planId,
+        planId: planSlug,
         status: clerkSubscription.status,
         updatedAt: new Date(),
       },
       create: {
         userId,
         clerkSubscriptionId: clerkSubscription.id,
-        planId,
+        planId: planSlug,
         status: clerkSubscription.status,
       },
     });

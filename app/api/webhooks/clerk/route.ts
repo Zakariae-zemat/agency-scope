@@ -60,12 +60,12 @@ export async function POST(req: NextRequest) {
         
         const { id, user_id, subscription_items, status, current_period_end } = evt.data;
         
-        // Extract plan_id from subscription_items array
-        const planId = subscription_items?.[0]?.plan_id || subscription_items?.[0]?.price?.product?.id || 'free_user';
+        // Extract plan SLUG from subscription_items array (use slug, not plan ID!)
+        const planSlug = subscription_items?.[0]?.plan?.slug || 'free_user';
 
         console.log(`Processing ${eventType} for user ${user_id}:`, {
           subscriptionId: id,
-          planId,
+          planSlug,
           status,
           subscription_items,
           rawData: evt.data
@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
           where: { userId: user_id },
           update: {
             clerkSubscriptionId: id,
-            planId: planId,
+            planId: planSlug,
             status: status,
             currentPeriodEnd: current_period_end
               ? new Date(current_period_end * 1000)
@@ -85,7 +85,7 @@ export async function POST(req: NextRequest) {
           create: {
             userId: user_id,
             clerkSubscriptionId: id,
-            planId: planId,
+            planId: planSlug,
             status: status,
             currentPeriodEnd: current_period_end
               ? new Date(current_period_end * 1000)
@@ -93,7 +93,7 @@ export async function POST(req: NextRequest) {
           },
         });
 
-        console.log(`Subscription ${eventType} saved:`, { userId: user_id, planId, status });
+        console.log(`Subscription ${eventType} saved:`, { userId: user_id, planSlug, status });
         break;
       }
 

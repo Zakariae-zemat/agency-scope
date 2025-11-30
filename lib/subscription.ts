@@ -36,23 +36,24 @@ export async function getUserSubscription(
       
       if (clerkSubscription && clerkSubscription.subscriptionItems && clerkSubscription.subscriptionItems.length > 0) {
         const subscriptionItem = clerkSubscription.subscriptionItems[0];
-        const planId = subscriptionItem.planId || "free_user";
+        // Use plan SLUG, not plan ID!
+        const planSlug = subscriptionItem.plan?.slug || "free_user";
         
-        console.log("Syncing subscription to database:", { userId, planId, status: clerkSubscription.status });
+        console.log("Syncing subscription to database:", { userId, planSlug, status: clerkSubscription.status });
         
         // Always sync to database to keep it up to date
         subscription = await prisma.subscription.upsert({
           where: { userId },
           update: {
             clerkSubscriptionId: clerkSubscription.id,
-            planId,
+            planId: planSlug,
             status: clerkSubscription.status,
             updatedAt: new Date(),
           },
           create: {
             userId,
             clerkSubscriptionId: clerkSubscription.id,
-            planId,
+            planId: planSlug,
             status: clerkSubscription.status,
           },
         });
