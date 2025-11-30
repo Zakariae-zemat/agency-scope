@@ -152,39 +152,35 @@ export function AgenciesTable({
 
   return (
     <div className="space-y-6">
-      {/* Search & Filters - Fully Responsive */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 p-3 sm:p-4">
-        <div className="flex flex-col gap-3">
-          {/* Search Input Row */}
-          <div className="flex flex-col sm:flex-row gap-2">
+      {/* Search & Filters */}
+      <div className="bg-white dark:bg-slate-900 rounded-3xl border-2 border-slate-100 dark:border-slate-800 p-6">
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col md:flex-row gap-3">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
+              <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
               <input
                 type="text"
                 placeholder="Search agencies..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                className="w-full h-10 pl-10 pr-3 border border-slate-300 dark:border-slate-700 focus:border-slate-500 dark:focus:border-slate-500 focus:outline-none text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100"
+                className="w-full h-12 pl-11 pr-4 border-2 border-slate-100 dark:border-slate-800 rounded-xl focus:border-slate-300 dark:focus:border-slate-700 focus:outline-none text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100"
               />
             </div>
             <button 
               onClick={handleSearch} 
               disabled={isPending}
-              className="px-4 h-10 bg-slate-900 dark:bg-slate-700 text-white text-sm font-medium hover:bg-slate-800 dark:hover:bg-slate-600 disabled:opacity-50 whitespace-nowrap"
+              className="px-6 h-12 bg-slate-900 dark:bg-slate-700 text-white text-sm font-bold rounded-xl hover:bg-slate-800 dark:hover:bg-slate-600 disabled:opacity-50 transition-all"
             >
-              <span className="hidden sm:inline">Search</span>
-              <Search className="h-4 w-4 sm:hidden" />
+              Search
             </button>
           </div>
 
-          {/* Filters & Controls Row */}
-          <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
-            {/* State Filter */}
+          <div className="flex flex-col md:flex-row gap-3 md:items-center md:justify-between">
             <select
               value={selectedState}
               onChange={(e) => handleStateChange(e.target.value)}
-              className="h-10 px-3 border border-slate-300 dark:border-slate-700 focus:border-slate-500 dark:focus:border-slate-500 focus:outline-none text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 flex-1 sm:flex-initial sm:min-w-[150px]"
+              className="h-12 px-4 border-2 border-slate-100 dark:border-slate-800 rounded-xl focus:border-slate-300 dark:focus:border-slate-700 focus:outline-none text-sm font-medium bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100"
             >
               <option value="">All States</option>
               {states.map((state) => (
@@ -194,40 +190,39 @@ export function AgenciesTable({
               ))}
             </select>
 
-            <div className="flex gap-2 w-full sm:w-auto sm:ml-auto">
-              {/* View Toggle */}
-              <div className="flex items-center border border-slate-300 dark:border-slate-700 flex-1 sm:flex-initial">
+            <div className="flex gap-3">
+              <div className="flex items-center border-2 border-slate-100 dark:border-slate-800 rounded-xl overflow-hidden">
                 <button
                   onClick={() => setViewMode('table')}
-                  className={`flex items-center justify-center gap-1.5 px-3 py-2 text-sm font-medium flex-1 sm:flex-initial ${
+                  className={`flex items-center gap-2 px-4 py-2.5 text-sm font-bold transition-all ${
                     viewMode === 'table' 
                       ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100' 
                       : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
                   }`}
                 >
-                  <List className="h-3.5 w-3.5" />
-                  <span className="hidden sm:inline">Table</span>
+                  <List className="h-4 w-4" />
+                  Table
                 </button>
                 <button
                   onClick={() => setViewMode('grid')}
-                  className={`flex items-center justify-center gap-1.5 px-3 py-2 text-sm font-medium border-l border-slate-300 dark:border-slate-700 flex-1 sm:flex-initial ${
+                  className={`flex items-center gap-2 px-4 py-2.5 text-sm font-bold border-l-2 border-slate-100 dark:border-slate-800 transition-all ${
                     viewMode === 'grid' 
                       ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100' 
                       : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
                   }`}
                 >
-                  <LayoutGrid className="h-3.5 w-3.5" />
-                  <span className="hidden sm:inline">Cards</span>
+                  <LayoutGrid className="h-4 w-4" />
+                  Cards
                 </button>
               </div>
 
               <button 
                 onClick={handleExport} 
                 disabled={isPending}
-                className="flex items-center justify-center gap-1.5 px-3 h-10 border border-slate-300 dark:border-slate-700 hover:border-slate-500 dark:hover:border-slate-500 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 text-sm font-medium flex-1 sm:flex-initial whitespace-nowrap"
+                className="px-6 h-12 bg-slate-900 dark:bg-slate-700 text-white text-sm font-bold rounded-xl hover:bg-slate-800 dark:hover:bg-slate-600 disabled:opacity-50 transition-all flex items-center gap-2"
               >
-                <Download className="h-3.5 w-3.5" />
-                <span className="hidden sm:inline">Export</span>
+                <Download className="h-4 w-4" />
+                Export
               </button>
             </div>
           </div>
@@ -339,6 +334,7 @@ export function AgenciesTable({
                 )}
               </tbody>
             </table>
+          </div>
           </div>
         </div>
       )}
