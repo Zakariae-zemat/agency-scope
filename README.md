@@ -77,7 +77,7 @@ AgencyScope is a production-ready, full-stack SaaS application built with Next.j
 | **Database** | Neon PostgreSQL (Serverless) |
 | **ORM** | Prisma 6.19 |
 | **Authentication** | Clerk Auth |
-| **Billing** | Clerk Billing + Stripe |
+| **Billing** | Clerk Billing |
 | **UI Components** | Shadcn/UI + Radix UI |
 | **Styling** | Tailwind CSS 4 |
 | **Theme** | next-themes (dark/light mode) |
@@ -145,7 +145,7 @@ This project was built to meet the following technical requirements:
 AgencyScope follows a modern, scalable architecture with clear separation of concerns:
 
 - **Client Layer**: Browser communicating via HTTPS with Next.js App Router
-- **Authentication & Billing**: Clerk handles auth, session management, and subscription billing via Stripe
+- **Authentication & Billing**: Clerk handles auth, session management, and subscription billing
 - **Application Layer**: Next.js 16 with App Router, Server Components, and API routes
 - **Data Layer**: Prisma ORM providing type-safe access to PostgreSQL
 - **Database**: Neon serverless PostgreSQL with connection pooling
@@ -159,7 +159,7 @@ AgencyScope follows a modern, scalable architecture with clear separation of con
 - Direct database access without API layer overhead
 
 **Webhook-Based Subscription Sync**
-- Real-time plan updates from Clerk/Stripe
+- Real-time plan updates from Clerk
 - Consistent state between billing provider and database
 - Automatic plan change handling
 
@@ -429,9 +429,8 @@ npx prisma db seed
 
 **Architecture:**
 1. **Clerk Billing** - Manages subscription plans and checkout sessions
-2. **Stripe** - Processes payments (integrated via Clerk)
-3. **Webhooks** - Sync subscription changes to database
-4. **Feature Gating** - Server-side checks for Pro features
+2. **Webhooks** - Sync subscription changes to database
+3. **Feature Gating** - Server-side checks for Pro features
 
 **Implementation Flow:**
 ```typescript
@@ -637,7 +636,6 @@ Since live demo visitors won't have admin access, here are screenshots of the ad
 
 **Billing Integration**
 - Managed by Clerk's hosted billing UI
-- Stripe-powered payment processing
 - Automatic subscription status sync via webhooks
 
 ---
@@ -697,6 +695,6 @@ This is a portfolio/assessment project, but feedback is welcome!
 
 ---
 
-**Technology Stack**: Next.js 16 | TypeScript 5 | Prisma | PostgreSQL | Clerk | Stripe | Vercel
+**Technology Stack**: Next.js 16 | TypeScript 5 | Prisma | PostgreSQL | Clerk | Vercel
 
 **Production URL**: [https://agency-scope.vercel.app](https://agency-scope.vercel.app)
