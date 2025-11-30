@@ -2,6 +2,7 @@ import { getCurrentUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { ContactsTable } from '@/components/contacts-table';
 import { getTodayViewCount } from '@/lib/actions';
+import { getUserSubscription } from '@/lib/subscription';
 
 interface PageProps {
   searchParams: Promise<{ page?: string; search?: string; agency?: string }>;
@@ -21,6 +22,8 @@ export default async function ContactsPage(props: PageProps) {
   const pageSize = 20;
 
   const viewStats = await getTodayViewCount();
+  const subscription = await getUserSubscription(user.clerkId);
+  const isPro = subscription?.isPro || false;
 
   const where = {
     AND: [
@@ -89,9 +92,11 @@ export default async function ContactsPage(props: PageProps) {
         </div>
         <div className="text-right">
           <div className="text-2xl font-bold">
-            {viewStats.remaining}/50
+            {isPro ? 'Unlimited' : `${viewStats.remaining}/50`}
           </div>
-          <div className="text-sm text-slate-600 dark:text-slate-400">views remaining</div>
+          <div className="text-sm text-slate-600 dark:text-slate-400">
+            {isPro ? 'Pro subscription' : 'views remaining'}
+          </div>
         </div>
       </div>
 
@@ -102,6 +107,7 @@ export default async function ContactsPage(props: PageProps) {
         totalPages={totalPages}
         total={total}
         remainingViews={viewStats.remaining}
+        isPro={isPro}
       />
     </div>
   );

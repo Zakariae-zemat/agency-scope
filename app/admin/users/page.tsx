@@ -45,7 +45,7 @@ export default async function AdminUsersPage(props: PageProps) {
   const usersWithDetails = await Promise.all(
     dbUsers.map(async (dbUser) => {
       // First and last activity should ALWAYS be absolute (not filtered by period)
-      const [firstView, lastView, clerkUser] = await Promise.all([
+      const [firstView, lastView, clerkUser, subscription] = await Promise.all([
         prisma.contactView.findFirst({
           where: { userId: dbUser.id },
           orderBy: { viewedAt: 'asc' },
@@ -55,6 +55,9 @@ export default async function AdminUsersPage(props: PageProps) {
           orderBy: { viewedAt: 'desc' },
         }),
         clerk.users.getUser(dbUser.clerkId).catch(() => null),
+        prisma.subscription.findUnique({
+          where: { userId: dbUser.clerkId },
+        }),
       ]);
 
       // Total views should be filtered by period
@@ -71,6 +74,8 @@ export default async function AdminUsersPage(props: PageProps) {
         where: viewWhere,
       });
 
+      const isPro = subscription?.status === 'active' && subscription?.planId === 'pro_subscription_plan';
+
       return {
         clerkId: dbUser.clerkId,
         email: dbUser.email,
@@ -80,6 +85,8 @@ export default async function AdminUsersPage(props: PageProps) {
         firstView: firstView?.viewedAt,
         lastView: lastView?.viewedAt,
         createdAt: dbUser.createdAt,
+        isPro,
+        planId: subscription?.planId || 'free_user',
       };
     })
   );
@@ -127,6 +134,9 @@ export default async function AdminUsersPage(props: PageProps) {
                 <th className="px-6 py-3 text-left text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
                   Last Activity
                 </th>
+                <th className="px-6 py-3 text-left text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
+                  Plan
+                </th>
                 <th className="px-6 py-3 text-right text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
                   Status
                 </th>
@@ -135,7 +145,7 @@ export default async function AdminUsersPage(props: PageProps) {
             <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
               {usersWithDetails.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-slate-500 dark:text-slate-500">
+                  <td colSpan={7} className="px-6 py-12 text-center text-slate-500 dark:text-slate-500">
                     <div className="flex flex-col items-center gap-3">
                       <div className="text-4xl">👥</div>
                       <div className="text-lg font-semibold">No users found</div>
@@ -185,6 +195,15 @@ export default async function AdminUsersPage(props: PageProps) {
                           ) : (
                             <span className="text-slate-400 dark:text-slate-500 italic">No activity</span>
                           )}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-black uppercase ${
+                          user.isPro
+                            ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg shadow-purple-500/30'
+                            : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400'
+                        }`}>
+                          {user.isPro ? '👑 Pro' : 'Free'}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right">

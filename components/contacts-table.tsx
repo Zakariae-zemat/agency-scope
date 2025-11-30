@@ -30,6 +30,7 @@ interface ContactsTableProps {
   totalPages: number;
   total: number;
   remainingViews: number;
+  isPro?: boolean;
 }
 
 export function ContactsTable({
@@ -39,6 +40,7 @@ export function ContactsTable({
   totalPages,
   total,
   remainingViews,
+  isPro = false,
 }: ContactsTableProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -67,6 +69,12 @@ export function ContactsTable({
   };
 
   const handleExport = async () => {
+    // Show upgrade modal for free users
+    if (!isPro) {
+      setShowUpgradeModal(true);
+      return;
+    }
+
     startTransition(async () => {
       const csv = await exportContactsToCSV({ search });
       const blob = new Blob([csv], { type: 'text/csv' });
@@ -86,8 +94,8 @@ export function ContactsTable({
       return;
     }
 
-    // Only check limit for new contact views
-    if (remainingViews === 0) {
+    // Pro users have unlimited views
+    if (!isPro && remainingViews === 0) {
       setShowUpgradeModal(true);
       return;
     }

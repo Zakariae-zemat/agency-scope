@@ -9,13 +9,22 @@ interface MetricCardProps {
     value: number;
     label: string;
   };
+  highlight?: boolean;
 }
 
-export function MetricCard({ title, value, icon: Icon, subtitle, trend }: MetricCardProps) {
+export function MetricCard({ title, value, icon: Icon, subtitle, trend, highlight = false }: MetricCardProps) {
   return (
-    <div className="group relative overflow-hidden rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 transition-all duration-300 hover:shadow-md hover:border-slate-300 dark:hover:border-slate-700">
+    <div className={`group relative overflow-hidden rounded-lg border p-6 transition-all duration-300 hover:shadow-md ${
+      highlight
+        ? 'border-purple-300 dark:border-purple-700 bg-gradient-to-br from-purple-50 to-blue-50 dark:from-purple-950/50 dark:to-blue-950/50'
+        : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-slate-300 dark:hover:border-slate-700'
+    }`}>
       {/* Subtle gradient overlay on hover */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-50/50 to-transparent dark:from-slate-800/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      <div className={`absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${
+        highlight 
+          ? 'from-purple-100/50 to-transparent dark:from-purple-900/50'
+          : 'from-slate-50/50 to-transparent dark:from-slate-800/50'
+      }`} />
       
       <div className="relative">
         {/* Header */}
@@ -26,8 +35,16 @@ export function MetricCard({ title, value, icon: Icon, subtitle, trend }: Metric
             </p>
           </div>
           {Icon && (
-            <div className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 group-hover:bg-cyan-50 dark:group-hover:bg-cyan-950/30 group-hover:border-cyan-200 dark:group-hover:border-cyan-800 transition-colors duration-300">
-              <Icon className="h-4 w-4 text-slate-600 dark:text-slate-400 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors duration-300" strokeWidth={2.5} />
+            <div className={`p-2 rounded-lg border transition-colors duration-300 ${
+              highlight
+                ? 'bg-purple-100 dark:bg-purple-900/50 border-purple-300 dark:border-purple-700 group-hover:bg-purple-200 dark:group-hover:bg-purple-900/70'
+                : 'bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 group-hover:bg-cyan-50 dark:group-hover:bg-cyan-950/30 group-hover:border-cyan-200 dark:group-hover:border-cyan-800'
+            }`}>
+              <Icon className={`h-4 w-4 transition-colors duration-300 ${
+                highlight
+                  ? 'text-purple-600 dark:text-purple-400 group-hover:text-purple-700 dark:group-hover:text-purple-300'
+                  : 'text-slate-600 dark:text-slate-400 group-hover:text-cyan-600 dark:group-hover:text-cyan-400'
+              }`} strokeWidth={2.5} />
             </div>
           )}
         </div>

@@ -3,9 +3,9 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { UserButton } from '@clerk/nextjs';
+import { UserButton, useUser } from '@clerk/nextjs';
 import { useTheme } from 'next-themes';
-import { Building2, Users, LayoutDashboard, TrendingUp, Menu, X, Sparkles, Moon, Sun, Shield } from 'lucide-react';
+import { Building2, Users, LayoutDashboard, TrendingUp, Menu, X, Sparkles, Moon, Sun, Shield, Crown } from 'lucide-react';
 
 const baseNavigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -21,9 +21,11 @@ interface DashboardNavProps {
 export function DashboardNav({ isAdmin = false }: DashboardNavProps) {
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
+  const { user } = useUser();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [isPro, setIsPro] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -33,6 +35,16 @@ export function DashboardNav({ isAdmin = false }: DashboardNavProps) {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Check Pro subscription status
+  useEffect(() => {
+    if (user) {
+      fetch('/api/subscription-status')
+        .then(res => res.json())
+        .then(data => setIsPro(data.isPro))
+        .catch(() => setIsPro(false));
+    }
+  }, [user]);
 
   return (
     <>
@@ -54,7 +66,9 @@ export function DashboardNav({ isAdmin = false }: DashboardNavProps) {
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center gap-2">
-              {baseNavigation.map((item) => {
+              {baseNavigation
+                .filter(item => !(isPro && item.name === 'Upgrade')) // Hide Upgrade for Pro users
+                .map((item) => {
                 const Icon = item.icon;
                 const isActive = pathname === item.href;
                 
@@ -115,8 +129,14 @@ export function DashboardNav({ isAdmin = false }: DashboardNavProps) {
                 </button>
               )}
 
-              {/* User Button */}
-              <div className="hidden md:flex items-center justify-center">
+              {/* User Button with Pro Badge */}
+              <div className="hidden md:flex items-center gap-2">
+                {isPro && (
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-purple-500 to-blue-500 shadow-lg shadow-purple-500/30">
+                    <Crown className="w-3.5 h-3.5 text-white" strokeWidth={2.5} />
+                    <span className="text-xs font-black text-white uppercase tracking-wide">Pro</span>
+                  </div>
+                )}
                 <UserButton afterSignOutUrl="/" />
               </div>
 
@@ -143,7 +163,17 @@ export function DashboardNav({ isAdmin = false }: DashboardNavProps) {
           }`}
         >
           <nav className="px-6 py-6 space-y-3 bg-slate-50 dark:bg-slate-900 border-t-2 border-slate-100 dark:border-slate-800">
-            {baseNavigation.map((item) => {
+            {/* Pro Badge - Mobile */}
+            {isPro && (
+              <div className="flex items-center justify-center gap-2 p-4 rounded-2xl bg-gradient-to-r from-purple-500 to-blue-500 shadow-lg shadow-purple-500/20">
+                <Crown className="w-5 h-5 text-white" strokeWidth={2.5} />
+                <span className="text-sm font-black text-white uppercase tracking-wide">Pro Member</span>
+              </div>
+            )}
+            
+            {baseNavigation
+              .filter(item => !(isPro && item.name === 'Upgrade')) // Hide Upgrade for Pro users
+              .map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
               

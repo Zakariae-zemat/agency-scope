@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 export default async function AdminOverviewPage() {
   // Quick stats
-  const [totalUsers, totalAgencies, totalContacts, totalViews, viewsToday] = await Promise.all([
+  const [totalUsers, totalAgencies, totalContacts, totalViews, viewsToday, totalProUsers] = await Promise.all([
     prisma.contactView.findMany({
       distinct: ['userId'],
       select: { userId: true },
@@ -18,6 +18,12 @@ export default async function AdminOverviewPage() {
         viewedAt: {
           gte: new Date(new Date().setHours(0, 0, 0, 0)),
         },
+      },
+    }),
+    prisma.subscription.count({
+      where: {
+        status: 'active',
+        planId: 'pro_subscription_plan',
       },
     }),
   ]);
@@ -64,6 +70,13 @@ export default async function AdminOverviewPage() {
             value={viewsToday}
             icon={TrendingUp}
             subtitle="Views in last 24h"
+          />
+          <MetricCard
+            title="Pro Users"
+            value={totalProUsers}
+            icon={Activity}
+            subtitle="Active Pro subscriptions"
+            highlight={true}
           />
         </div>
       </div>

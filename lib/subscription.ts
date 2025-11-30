@@ -1,5 +1,5 @@
 import { prisma } from "./prisma";
-import { auth } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 
 export type SubscriptionStatus =
   | "active"
@@ -25,9 +25,41 @@ export async function getUserSubscription(
   userId: string
 ): Promise<UserSubscription | null> {
   try {
-    const subscription = await prisma.subscription.findUnique({
+    // First, try to get from database
+    let subscription = await prisma.subscription.findUnique({
       where: { userId },
     });
+
+    // If not in database, try to fetch from Clerk API and sync
+    if (!subscription) {
+      try {
+        const client = await clerkClient();
+        const clerkSubscription = await client.billing.getUserBillingSubscription(userId);
+        
+        if (clerkSubscription && clerkSubscription.subscriptionItems && clerkSubscription.subscriptionItems.length > 0) {
+          const subscriptionItem = clerkSubscription.subscriptionItems[0];
+          const planId = subscriptionItem.planId || "free_user";
+          
+          // Sync to database
+          subscription = await prisma.subscription.upsert({
+            where: { userId },
+            update: {
+              planId,
+              status: clerkSubscription.status,
+              updatedAt: new Date(),
+            },
+            create: {
+              userId,
+              clerkSubscriptionId: clerkSubscription.id,
+              planId,
+              status: clerkSubscription.status,
+            },
+          });
+        }
+      } catch (clerkError) {
+        console.log("Could not fetch from Clerk API:", clerkError);
+      }
+    }
 
     if (!subscription) {
       return null;
