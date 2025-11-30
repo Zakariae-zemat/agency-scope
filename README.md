@@ -32,13 +32,6 @@ AgencyScope is a production-ready, full-stack SaaS application built with Next.j
 
 ## Features
 
-### Subscription & Billing
-- **Clerk Billing Integration** - Seamless subscription management powered by Clerk + Stripe
-- **Pro Plan ($39/month)** - Unlimited contact views, real-time search, CSV export
-- **Free Tier** - 50 contact views per day with upgrade prompts
-- **Subscription Sync** - Webhook-based plan synchronization with database
-- **Billing Portal** - Managed by Clerk for payment methods and invoices
-
 ### Core Functionality
 - **Secure Authentication** - Clerk-powered auth with middleware protection
 - **Agency Directory** - Browse 900+ government agencies with advanced filtering
@@ -58,6 +51,14 @@ AgencyScope is a production-ready, full-stack SaaS application built with Next.j
 - **Agency Management** - Full CRUD operations with responsive tables/cards
 - **Metrics Dashboard** - Real-time analytics showing Pro subscribers and activity
 - **Role-Based Access** - Admin routes protected via Clerk metadata
+
+  
+### Subscription & Billing
+- **Clerk Billing Integration** - Seamless subscription management powered by Clerk + Stripe
+- **Pro Plan ($39/month)** - Unlimited contact views, real-time search, CSV export
+- **Free Tier** - 50 contact views per day with upgrade prompts
+- **Subscription Sync** - Webhook-based plan synchronization with database
+- **Billing Portal** - Managed by Clerk for payment methods and invoices
 
 ### UX/UI
 - **Fully Responsive** - Mobile-first design with adaptive layouts
