@@ -32,9 +32,6 @@ export async function POST() {
         clerkSubscriptionId: clerkSubscription.id,
         planId,
         status: clerkSubscription.status,
-        currentPeriodEnd: clerkSubscription.currentPeriodEnd 
-          ? new Date(clerkSubscription.currentPeriodEnd * 1000)
-          : null,
         updatedAt: new Date(),
       },
       create: {
@@ -42,9 +39,6 @@ export async function POST() {
         clerkSubscriptionId: clerkSubscription.id,
         planId,
         status: clerkSubscription.status,
-        currentPeriodEnd: clerkSubscription.currentPeriodEnd 
-          ? new Date(clerkSubscription.currentPeriodEnd * 1000)
-          : null,
       },
     });
 
