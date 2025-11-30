@@ -317,8 +317,10 @@ export function AdminAgenciesTable({
             </table>
           </div>
         </div>
-      ) : (
-        /* Grid View with Lazy Loading */
+      )}
+
+      {/* Grid View with Lazy Loading */}
+      {viewMode === 'grid' && (
         <div>
           {displayedAgencies.length === 0 ? (
             <div className="bg-white dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 p-16 text-center">
