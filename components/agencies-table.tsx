@@ -279,65 +279,6 @@ export function AgenciesTable({
                   </tr>
                 ) : (
                   agencies.map((agency) => (
-                <option key={state} value={state}>
-                  {state}
-                </option>
-              ))}
-            </select>
-            
-            <button 
-              onClick={handleExport} 
-              disabled={isPending}
-              className="flex items-center gap-1.5 px-3 h-10 border border-slate-300 dark:border-slate-700 hover:border-slate-500 dark:hover:border-slate-500 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 text-sm font-medium"
-            >
-              <Download className="h-3.5 w-3.5" />
-              Export
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Table View */}
-      {viewMode === 'table' ? (
-        <div className="bg-white dark:bg-slate-900 rounded-3xl border-2 border-slate-100 dark:border-slate-800 overflow-hidden hover:shadow-xl transition-shadow duration-300">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b-2 border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800">
-                  <th className="px-6 py-3 text-left">
-                    <span className="text-xs font-black text-slate-600 dark:text-slate-400 uppercase tracking-wider">Agency Name</span>
-                  </th>
-                  <th className="px-6 py-3 text-left">
-                    <span className="text-xs font-black text-slate-600 dark:text-slate-400 uppercase tracking-wider">Type</span>
-                  </th>
-                  <th className="px-6 py-3 text-left">
-                    <span className="text-xs font-black text-slate-600 dark:text-slate-400 uppercase tracking-wider">Contacts</span>
-                  </th>
-                  <th className="px-6 py-3 text-right">
-                    <span className="text-xs font-black text-slate-600 dark:text-slate-400 uppercase tracking-wider">Population</span>
-                  </th>
-                  <th className="px-6 py-4 text-center">
-                    <span className="text-xs font-black text-slate-600 uppercase tracking-wider">Contacts</span>
-                  </th>
-                  <th className="px-6 py-3 text-right">
-                    <span className="text-xs font-black text-slate-600 dark:text-slate-400 uppercase tracking-wider">Actions</span>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {agencies.length === 0 ? (
-                  <tr>
-                    <td colSpan={6} className="px-6 py-16 text-center">
-                      <div className="flex flex-col items-center gap-3">
-                        <div className="p-4 bg-slate-100 dark:bg-slate-800 rounded-full">
-                          <Building2 className="h-8 w-8 text-slate-400 dark:text-slate-500" strokeWidth={2} />
-                        </div>
-                        <p className="text-lg font-bold text-slate-500 dark:text-slate-400">No agencies found</p>
-                      </div>
-                    </td>
-                  </tr>
-                ) : (
-                  agencies.map((agency) => (
                     <tr key={agency.id} className="border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors duration-200">
                       <td className="px-6 py-4">
                         <div>
