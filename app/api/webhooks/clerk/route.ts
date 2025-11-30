@@ -48,19 +48,26 @@ export async function POST(req: NextRequest) {
 
   const eventType = evt.type;
 
+  console.log("=== CLERK WEBHOOK RECEIVED ===");
+  console.log("Event Type:", eventType);
+  console.log("Full Payload:", JSON.stringify(evt, null, 2));
+
   try {
     switch (eventType) {
       case "subscription.created":
       case "subscription.updated": {
+        console.log("Raw event data:", JSON.stringify(evt.data, null, 2));
+        
         const { id, user_id, subscription_items, status, current_period_end } = evt.data;
         
         // Extract plan_id from subscription_items array
-        const planId = subscription_items?.[0]?.plan_id || 'free_user';
+        const planId = subscription_items?.[0]?.plan_id || subscription_items?.[0]?.price?.product?.id || 'free_user';
 
         console.log(`Processing ${eventType} for user ${user_id}:`, {
           subscriptionId: id,
           planId,
           status,
+          subscription_items,
           rawData: evt.data
         });
 
