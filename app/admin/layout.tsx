@@ -3,6 +3,8 @@ import { isAdmin } from '@/lib/getUserRole';
 import { AdminNav } from '@/components/admin-nav';
 import { PageTransition } from '@/components/page-transition';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminLayout({
   children,
 }: {
