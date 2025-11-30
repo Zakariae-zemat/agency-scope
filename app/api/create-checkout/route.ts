@@ -15,26 +15,39 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid plan" }, { status: 400 });
     }
 
-    // Use Clerk's API to create a subscription checkout session
+    // Get the Clerk client
     const client = await clerkClient();
     
-    // Create a subscription for the user
-    const subscription = await client.subscriptions.createSubscription({
-      userId,
-      planId: planKey,
-    });
+    // Get the user's billing subscription to check existing status
+    try {
+      const billingSubscription = await client.billing.getUserBillingSubscription(userId);
+      
+      // If user already has a subscription, return subscription management URL
+      if (billingSubscription && billingSubscription.status === 'active') {
+        return NextResponse.json({
+          alreadySubscribed: true,
+          message: "You already have an active subscription"
+        });
+      }
+    } catch (error) {
+      // User doesn't have a subscription yet, which is fine
+      console.log("No existing subscription found");
+    }
 
-    // Return the checkout URL
+    // Return success - frontend will handle redirect to Clerk billing
     return NextResponse.json({
-      url: subscription.stripeCheckoutSessionUrl,
-      subscriptionId: subscription.id,
+      success: true,
+      planKey,
+      userId,
+      // The frontend will redirect to Clerk's billing portal
+      redirectUrl: `https://accounts.clerk.com/subscribe/${planKey}`
     });
   } catch (error: any) {
-    console.error("Error creating checkout:", error);
+    console.error("Error in checkout:", error);
     return NextResponse.json(
       { 
         error: error?.message || "Internal server error",
-        details: error?.errors?.[0]?.message
+        details: error?.errors?.[0]?.message || "Failed to process checkout"
       },
       { status: 500 }
     );

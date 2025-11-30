@@ -46,30 +46,18 @@ export default function PricingPage() {
 
   const handleUpgrade = async (planKey: string) => {
     if (planKey === "free_user") return;
+    if (!user) {
+      alert("Please sign in to upgrade");
+      return;
+    }
 
     try {
-      // Create Stripe Checkout session via Clerk
-      const response = await fetch("/api/create-checkout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          planKey,
-          userId: user?.id,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (data.url) {
-        // Redirect to Stripe Checkout
-        window.location.href = data.url;
-      } else {
-        console.error("No checkout URL returned");
-      }
+      // Redirect directly to Clerk's user profile billing page
+      // This is the standard way to handle Clerk Billing upgrades
+      router.push("/user-profile#billing");
     } catch (error) {
-      console.error("Error creating checkout:", error);
+      console.error("Error navigating to checkout:", error);
+      alert("Failed to start checkout. Please try again.");
     }
   };
 
