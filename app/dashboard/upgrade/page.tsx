@@ -1,11 +1,44 @@
-import { getCurrentUser } from '@/lib/auth';
+"use client";
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Check, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
+import { useUser } from '@clerk/nextjs';
+import { useState } from 'react';
 
-export default async function UpgradePage() {
-  const user = await getCurrentUser();
+export default function UpgradePage() {
+  const { user } = useUser();
+  const [loading, setLoading] = useState(false);
+
+  const handleUpgrade = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch("/api/create-checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          planKey: "pro_subscription_plan",
+          userId: user?.id,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert(data.message || "Please configure Clerk Billing first");
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Something went wrong. Please try again.");
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="space-y-8">
@@ -102,8 +135,12 @@ export default async function UpgradePage() {
               </li>
             </ul>
 
-            <Button className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800">
-              Upgrade Now
+            <Button 
+              className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
+              onClick={handleUpgrade}
+              disabled={loading}
+            >
+              {loading ? "Processing..." : "Upgrade Now"}
             </Button>
           </CardContent>
         </Card>
