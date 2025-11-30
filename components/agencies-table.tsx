@@ -237,7 +237,7 @@ export function AgenciesTable({
       </div>
 
       {/* Table View */}
-      {viewMode === 'table' && (
+      {viewMode === 'table' ? (
         <div className="bg-white dark:bg-slate-900 rounded-3xl border-2 border-slate-100 dark:border-slate-800 overflow-hidden hover:shadow-xl transition-shadow duration-300">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[640px]">
@@ -335,12 +335,9 @@ export function AgenciesTable({
               </tbody>
             </table>
           </div>
-          </div>
         </div>
-      )}
-
-      {/* Grid View */}
-      {viewMode === 'grid' && (
+      ) : (
+        /* Grid View */
         <div>
           {displayedAgencies.length === 0 ? (
             <div className="bg-white rounded-3xl border-2 border-slate-100 p-16 text-center">

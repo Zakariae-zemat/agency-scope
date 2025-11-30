@@ -287,8 +287,7 @@ export function AdminAgenciesTable({
           </div>
 
           {/* Desktop: Table */}
-          <div className="hidden md:block">
-          <div className="overflow-x-auto">
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full min-w-[640px]">
               <thead>
                 <tr className="border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
@@ -385,10 +384,8 @@ export function AdminAgenciesTable({
             </table>
           </div>
         </div>
-      )}
-
-      {/* Grid View with Lazy Loading */}
-      {viewMode === 'grid' && (
+      ) : (
+        /* Grid View with Lazy Loading */
         <div>
           {displayedAgencies.length === 0 ? (
             <div className="bg-white dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 p-16 text-center">

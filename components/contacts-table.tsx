@@ -399,7 +399,6 @@ export function ContactsTable({
                 </tbody>
               </table>
             </div>
-            </div>
           </div>
         ) : (
           /* Grid View */
