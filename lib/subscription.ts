@@ -25,40 +25,49 @@ export async function getUserSubscription(
   userId: string
 ): Promise<UserSubscription | null> {
   try {
-    // First, try to get from database
-    let subscription = await prisma.subscription.findUnique({
-      where: { userId },
-    });
-
-    // If not in database, try to fetch from Clerk API and sync
-    if (!subscription) {
-      try {
-        const client = await clerkClient();
-        const clerkSubscription = await client.billing.getUserBillingSubscription(userId);
+    // ALWAYS fetch from Clerk API to ensure we have the latest subscription data
+    let subscription: any = null;
+    
+    try {
+      const client = await clerkClient();
+      const clerkSubscription = await client.billing.getUserBillingSubscription(userId);
+      
+      console.log("Clerk subscription for user", userId, ":", JSON.stringify(clerkSubscription, null, 2));
+      
+      if (clerkSubscription && clerkSubscription.subscriptionItems && clerkSubscription.subscriptionItems.length > 0) {
+        const subscriptionItem = clerkSubscription.subscriptionItems[0];
+        const planId = subscriptionItem.planId || "free_user";
         
-        if (clerkSubscription && clerkSubscription.subscriptionItems && clerkSubscription.subscriptionItems.length > 0) {
-          const subscriptionItem = clerkSubscription.subscriptionItems[0];
-          const planId = subscriptionItem.planId || "free_user";
-          
-          // Sync to database
-          subscription = await prisma.subscription.upsert({
-            where: { userId },
-            update: {
-              planId,
-              status: clerkSubscription.status,
-              updatedAt: new Date(),
-            },
-            create: {
-              userId,
-              clerkSubscriptionId: clerkSubscription.id,
-              planId,
-              status: clerkSubscription.status,
-            },
-          });
-        }
-      } catch (clerkError) {
-        console.log("Could not fetch from Clerk API:", clerkError);
+        console.log("Syncing subscription to database:", { userId, planId, status: clerkSubscription.status });
+        
+        // Always sync to database to keep it up to date
+        subscription = await prisma.subscription.upsert({
+          where: { userId },
+          update: {
+            clerkSubscriptionId: clerkSubscription.id,
+            planId,
+            status: clerkSubscription.status,
+            updatedAt: new Date(),
+          },
+          create: {
+            userId,
+            clerkSubscriptionId: clerkSubscription.id,
+            planId,
+            status: clerkSubscription.status,
+          },
+        });
+        
+        console.log("Subscription synced successfully:", subscription);
+      } else {
+        console.log("No subscription items found in Clerk for user:", userId);
       }
+    } catch (clerkError) {
+      console.error("Could not fetch from Clerk API:", clerkError);
+      
+      // Fallback to database if Clerk API fails
+      subscription = await prisma.subscription.findUnique({
+        where: { userId },
+      });
     }
 
     if (!subscription) {
