@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 
 const plans = [
   {
@@ -41,11 +42,35 @@ const plans = [
 
 export default function PricingPage() {
   const router = useRouter();
+  const { user } = useUser();
 
-  const handleUpgrade = (planKey: string) => {
-    // This will be handled by Clerk's <PricingTable /> component
-    // For now, navigate to dashboard where user can upgrade
-    router.push("/dashboard");
+  const handleUpgrade = async (planKey: string) => {
+    if (planKey === "free_user") return;
+
+    try {
+      // Create Stripe Checkout session via Clerk
+      const response = await fetch("/api/create-checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          planKey,
+          userId: user?.id,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.url) {
+        // Redirect to Stripe Checkout
+        window.location.href = data.url;
+      } else {
+        console.error("No checkout URL returned");
+      }
+    } catch (error) {
+      console.error("Error creating checkout:", error);
+    }
   };
 
   return (
