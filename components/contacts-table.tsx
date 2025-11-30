@@ -153,7 +153,7 @@ export function ContactsTable({
                 />
               </div>
               <button 
-                onClick={handleSearch} 
+                onClick={() => handleSearch()} 
                 disabled={isPending}
                 className="px-4 h-10 bg-slate-900 dark:bg-slate-700 text-white text-sm font-medium hover:bg-slate-800 dark:hover:bg-slate-600 disabled:opacity-50"
               >
